@@ -1,380 +1,903 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="uz">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Gusto & Co. — Menyu</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-:root{
-  --green:#1a2e1a;
-  --green-mid:#2d4a2d;
-  --gold:#b8962e;
-  --cream:#f5f3ec;
-  --white:#ffffff;
-  --text:#1a1a1a;
-  --muted:#6b6b5a;
-  --border:#e0ddd4;
-}
-html{scroll-behavior:smooth}
-body{
-  font-family:'Montserrat',sans-serif;
-  background:var(--cream);
-  color:var(--text);
-  min-height:100vh;
-  overflow-x:hidden;
-  padding-bottom:80px; /* Pastki navbar uchun joy */
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0"
+    />
+    <title>Gusto & Co. — Menyu</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --green: #1a2e1a;
+        --green-mid: #2d4a2d;
+        --gold: #b8962e;
+        --cream: #f5f3ec;
+        --white: #ffffff;
+        --text: #1a1a1a;
+        --muted: #6b6b5a;
+        --border: #e0ddd4;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+        padding-bottom: 80px; /* Pastki navbar uchun joy */
+      }
 
-/* ── ANIMATSIYALAR ── */
-@keyframes shimmer{
-  0%{background-position:-400px 0}
-  100%{background-position:400px 0}
-}
-@keyframes popIn{
-  0%{transform:scale(0.88);opacity:0}
-  70%{transform:scale(1.04)}
-  100%{transform:scale(1);opacity:1}
-}
-@keyframes fadeUp{
-  from{opacity:0;transform:translateY(28px)}
-  to{opacity:1;transform:translateY(0)}
-}
+      /* ── ANIMATSIYALAR ── */
+      @keyframes shimmer {
+        0% {
+          background-position: -400px 0;
+        }
+        100% {
+          background-position: 400px 0;
+        }
+      }
+      @keyframes popIn {
+        0% {
+          transform: scale(0.88);
+          opacity: 0;
+        }
+        70% {
+          transform: scale(1.04);
+        }
+        100% {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(28px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-/* LOGO HEADER */
-.top-header {
-  text-align: center;
-  padding: 24px 20px 10px;
-  background: var(--cream);
-}
-.logo{
-  font-family:'Playfair Display',serif;
-  font-size:28px;
-  font-weight:700;
-  color:var(--green);
-  text-decoration:none;
-  display: inline-block;
-}
-.logo em{font-style:italic}
+      /* LOGO HEADER */
+      .top-header {
+        text-align: center;
+        padding: 24px 20px 10px;
+        background: var(--cream);
+      }
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--green);
+        text-decoration: none;
+        display: inline-block;
+      }
+      .logo em {
+        font-style: italic;
+      }
 
-/* ── UZUM STYLE PASTKI NAVBAR ── */
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 64px;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  z-index: 400;
-  box-shadow: 0 -4px 20px rgba(0,0,0,0.04);
-}
-.bottom-nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: var(--muted);
-  text-decoration: none;
-  font-size: 10px;
-  font-weight: 500;
-  gap: 4px;
-  flex: 1;
-  height: 100%;
-  transition: color 0.2s;
-  position: relative;
-  cursor: pointer;
-  font-family: inherit;
-}
-.bottom-nav-item svg {
-  width: 22px;
-  height: 22px;
-  fill: none; /* Standart holatda ichi bo'sh */
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: fill 0.2s, color 0.2s;
-}
+      /* ── UZUM STYLE PASTKI NAVBAR ── */
+      .bottom-nav {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 64px;
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-top: 1px solid var(--border);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        z-index: 400;
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+      }
+      .bottom-nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 10px;
+        font-weight: 500;
+        gap: 4px;
+        flex: 1;
+        height: 100%;
+        transition: color 0.2s;
+        position: relative;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .bottom-nav-item svg {
+        width: 22px;
+        height: 22px;
+        fill: none; /* Standart holatda ichi bo'sh */
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transition:
+          fill 0.2s,
+          color 0.2s;
+      }
 
-/* Aktiv holatda rang to'qlashadi va ichi qorayadi (to'ladi) */
-.bottom-nav-item:hover, .bottom-nav-item.active {
-  color: var(--text); /* To'q qora rang */
-}
-.bottom-nav-item.active svg {
-  fill: currentColor; /* Bosilganda ichi rang bilan to'ladi */
-}
-.bottom-nav-item.active span {
-  font-weight: 600;
-}
+      /* Aktiv holatda rang to'qlashadi va ichi qorayadi (to'ladi) */
+      .bottom-nav-item:hover,
+      .bottom-nav-item.active {
+        color: var(--text); /* To'q qora rang */
+      }
+      .bottom-nav-item.active svg {
+        fill: currentColor; /* Bosilganda ichi rang bilan to'ladi */
+      }
+      .bottom-nav-item.active span {
+        font-weight: 600;
+      }
 
-.nav-badge {
-  position: absolute;
-  top: 6px;
-  right: calc(50% - 20px);
-  background: var(--gold);
-  color: #fff;
-  min-width: 16px;
-  height: 16px;
-  border-radius: 8px;
-  font-size: 9px;
-  font-weight: 700;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 0 4px;
-  animation: popIn 0.3s ease both;
-}
-.nav-badge.show { display: flex; }
+      .nav-badge {
+        position: absolute;
+        top: 6px;
+        right: calc(50% - 20px);
+        background: var(--gold);
+        color: #fff;
+        min-width: 16px;
+        height: 16px;
+        border-radius: 8px;
+        font-size: 9px;
+        font-weight: 700;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 0 4px;
+        animation: popIn 0.3s ease both;
+      }
+      .nav-badge.show {
+        display: flex;
+      }
 
-/* PAGE HEADER */
-.page-header{
-  text-align:center;padding:10px 40px 20px;
-  animation:fadeUp .6s .1s ease both;
-}
-.page-header p{font-size:12px;letter-spacing:3px;color:var(--muted);font-weight:400;text-transform:uppercase}
+      /* PAGE HEADER */
+      .page-header {
+        text-align: center;
+        padding: 10px 40px 20px;
+        animation: fadeUp 0.6s 0.1s ease both;
+      }
+      .page-header p {
+        font-size: 12px;
+        letter-spacing: 3px;
+        color: var(--muted);
+        font-weight: 400;
+        text-transform: uppercase;
+      }
 
-/* FILTERS */
-.filters{
-  padding:0 40px 36px;
-  display:flex; gap:10px; flex-wrap:wrap;
-  animation:fadeUp .6s .18s ease both;
-}
-.filter-pill{
-  padding:11px 22px;border-radius:30px;
-  font-size:12px;font-weight:500;
-  border:1.5px solid var(--border);
-  background:var(--white);color:var(--text);
-  cursor:pointer;
-  transition:all .22s, transform .15s;
-  font-family:'Montserrat',sans-serif;
-}
-.filter-pill:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px)}
-.filter-pill:active{transform:scale(0.96)}
-.filter-pill.active{background:var(--green);color:#fff;border-color:var(--green);box-shadow:0 4px 14px rgba(26,46,26,0.2)}
+      /* FILTERS */
+      .filters {
+        padding: 0 40px 36px;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        animation: fadeUp 0.6s 0.18s ease both;
+      }
+      .filter-pill {
+        padding: 11px 22px;
+        border-radius: 30px;
+        font-size: 12px;
+        font-weight: 500;
+        border: 1.5px solid var(--border);
+        background: var(--white);
+        color: var(--text);
+        cursor: pointer;
+        transition:
+          all 0.22s,
+          transform 0.15s;
+        font-family: "Montserrat", sans-serif;
+      }
+      .filter-pill:hover {
+        border-color: var(--green);
+        color: var(--green);
+        transform: translateY(-2px);
+      }
+      .filter-pill:active {
+        transform: scale(0.96);
+      }
+      .filter-pill.active {
+        background: var(--green);
+        color: #fff;
+        border-color: var(--green);
+        box-shadow: 0 4px 14px rgba(26, 46, 26, 0.2);
+      }
 
-/* GRID */
-.menu-grid{
-  display:grid; grid-template-columns:repeat(3,1fr); gap:24px; padding:0 40px 40px;
-}
+      /* GRID */
+      .menu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+        padding: 0 40px 40px;
+      }
 
-/* CARD */
-.card{
-  background:var(--white);border-radius:16px;overflow:hidden;
-  border:1px solid var(--border);cursor:pointer;
-  transition:transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
-  opacity:0; animation:fadeUp .55s ease both;
-}
-.card:hover{transform:translateY(-8px); box-shadow:0 24px 56px rgba(0,0,0,0.11)}
+      /* CARD */
+      .card {
+        background: var(--white);
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition:
+          transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+          box-shadow 0.35s ease;
+        opacity: 0;
+        animation: fadeUp 0.55s ease both;
+      }
+      .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 24px 56px rgba(0, 0, 0, 0.11);
+      }
 
-.card-img{ position:relative;height:240px;overflow:hidden; background:#e8e5dc; }
-.card-img::before{
-  content:''; position:absolute;inset:0;z-index:1;
-  background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.45) 50%,transparent 100%);
-  background-size:400px 100%; animation:shimmer 1.6s infinite;
-}
-.card-img img{ width:100%;height:100%; object-fit:cover;display:block; position:absolute;inset:0; opacity:0; transition:opacity .5s ease; }
-.card-img img.loaded{opacity:1}
-.card-img.img-ready::before{display:none}
+      .card-img {
+        position: relative;
+        height: 240px;
+        overflow: hidden;
+        background: #e8e5dc;
+      }
+      .card-img::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.45) 50%,
+          transparent 100%
+        );
+        background-size: 400px 100%;
+        animation: shimmer 1.6s infinite;
+      }
+      .card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      .card-img img.loaded {
+        opacity: 1;
+      }
+      .card-img.img-ready::before {
+        display: none;
+      }
 
-.card-badge{
-  position:absolute;top:14px;left:14px;z-index:3; background:var(--gold);color:#fff;
-  border-radius:20px;padding:5px 12px; font-size:11px;font-weight:700; animation:popIn .4s .3s ease both;
-}
-.card-body{padding:20px 20px 22px}
-.card-cat{ font-size:10px;font-weight:700;letter-spacing:2px; text-transform:uppercase;color:var(--gold);margin-bottom:8px; }
-.card-name{ font-family:'Playfair Display',serif; font-size:20px;font-weight:600;color:var(--text); margin-bottom:8px;line-height:1.25; }
-.card-ingredients{ font-size:12px;color:var(--muted);line-height:1.65;margin-bottom:18px; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
-.card-footer{ display:flex;align-items:center;justify-content:space-between; padding-top:16px;border-top:1px solid var(--border); }
-.card-price{ font-family:'Playfair Display',serif; font-size:20px;font-weight:700;color:var(--gold); }
-.card-price span{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:400;color:var(--muted)}
-.add-btn{
-  background:var(--green);color:#fff; border:none;border-radius:30px; padding:10px 18px;
-  font-family:'Montserrat',sans-serif; font-size:11px;font-weight:700;letter-spacing:1px; cursor:pointer;
-  transition:all .22s, transform .15s; display:flex;align-items:center;gap:6px;white-space:nowrap; position:relative;overflow:hidden;
-}
-.add-btn:hover{background:var(--green-mid);transform:scale(1.04)}
-.add-btn.in-cart{background:var(--gold)}
+      .card-badge {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        z-index: 3;
+        background: var(--gold);
+        color: #fff;
+        border-radius: 20px;
+        padding: 5px 12px;
+        font-size: 11px;
+        font-weight: 700;
+        animation: popIn 0.4s 0.3s ease both;
+      }
+      .card-body {
+        padding: 20px 20px 22px;
+      }
+      .card-cat {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 8px;
+      }
+      .card-name {
+        font-family: "Playfair Display", serif;
+        font-size: 20px;
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+        line-height: 1.25;
+      }
+      .card-ingredients {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.65;
+        margin-bottom: 18px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 16px;
+        border-top: 1px solid var(--border);
+      }
+      .card-price {
+        font-family: "Playfair Display", serif;
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--gold);
+      }
+      .card-price span {
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px;
+        font-weight: 400;
+        color: var(--muted);
+      }
+      .add-btn {
+        background: var(--green);
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: 10px 18px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        cursor: pointer;
+        transition:
+          all 0.22s,
+          transform 0.15s;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        white-space: nowrap;
+        position: relative;
+        overflow: hidden;
+      }
+      .add-btn:hover {
+        background: var(--green-mid);
+        transform: scale(1.04);
+      }
+      .add-btn.in-cart {
+        background: var(--gold);
+      }
 
-/* BOTTOM SHEET */
-.sheet-overlay{
-  position:fixed;inset:0;z-index:500; background:rgba(0,0,0,0); pointer-events:none;
-  transition:background .32s ease, backdrop-filter .32s ease; backdrop-filter:blur(0px); -webkit-backdrop-filter:blur(0px);
-}
-.sheet-overlay.open{ background:rgba(0,0,0,0.42); backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px); pointer-events:all; }
-.sheet{
-  position:fixed; left:0;right:0;bottom:0; z-index:501; background:var(--white); border-radius:20px 20px 0 0; height:58vh;
-  transform:translateY(100%); transition:transform .4s cubic-bezier(.32,0,.15,1); display:flex;flex-direction:column; overflow:hidden; box-shadow:0 -8px 50px rgba(0,0,0,0.2);
-}
-.sheet.open{transform:translateY(0)}
-.sheet-handle{ flex-shrink:0; display:flex;justify-content:center;align-items:center; padding:10px 0 4px; cursor:grab; }
-.sheet-handle-bar{ width:36px;height:4px;border-radius:2px; background:var(--border); }
+      /* BOTTOM SHEET */
+      .sheet-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 500;
+        background: rgba(0, 0, 0, 0);
+        pointer-events: none;
+        transition:
+          background 0.32s ease,
+          backdrop-filter 0.32s ease;
+        backdrop-filter: blur(0px);
+        -webkit-backdrop-filter: blur(0px);
+      }
+      .sheet-overlay.open {
+        background: rgba(0, 0, 0, 0.42);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        pointer-events: all;
+      }
+      .sheet {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 501;
+        background: var(--white);
+        border-radius: 20px 20px 0 0;
+        height: 58vh;
+        transform: translateY(100%);
+        transition: transform 0.4s cubic-bezier(0.32, 0, 0.15, 1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        box-shadow: 0 -8px 50px rgba(0, 0, 0, 0.2);
+      }
+      .sheet.open {
+        transform: translateY(0);
+      }
+      .sheet-handle {
+        flex-shrink: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 0 4px;
+        cursor: grab;
+      }
+      .sheet-handle-bar {
+        width: 36px;
+        height: 4px;
+        border-radius: 2px;
+        background: var(--border);
+      }
 
-.sheet-img-top{ flex-shrink:0; width:100%;height:190px; overflow:hidden;background:#e8e5dc; position:relative; }
-.sheet-img-top::before{ content:'';position:absolute;inset:0;z-index:1; background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.4) 50%,transparent 100%); background-size:400px 100%; animation:shimmer 1.6s infinite; }
-.sheet-img-top img{ width:100%;height:100%; object-fit:cover;display:block; opacity:0; transition:opacity .45s ease; }
-.sheet-img-top img.loaded{opacity:1}
-.sheet-img-top.img-ready::before{display:none}
-.sheet-img-top::after{ content:'';position:absolute;bottom:0;left:0;right:0; height:60px; background:linear-gradient(to top,var(--white),transparent); z-index:2;pointer-events:none; }
+      .sheet-img-top {
+        flex-shrink: 0;
+        width: 100%;
+        height: 190px;
+        overflow: hidden;
+        background: #e8e5dc;
+        position: relative;
+      }
+      .sheet-img-top::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+          90deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 100%
+        );
+        background-size: 400px 100%;
+        animation: shimmer 1.6s infinite;
+      }
+      .sheet-img-top img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        opacity: 0;
+        transition: opacity 0.45s ease;
+      }
+      .sheet-img-top img.loaded {
+        opacity: 1;
+      }
+      .sheet-img-top.img-ready::before {
+        display: none;
+      }
+      .sheet-img-top::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(to top, var(--white), transparent);
+        z-index: 2;
+        pointer-events: none;
+      }
 
-.sheet-inner-scroll{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-.sheet-content{padding:14px 22px 0}
-.sheet-cat{ font-size:10px;font-weight:700;letter-spacing:2px; text-transform:uppercase;color:var(--gold);margin-bottom:5px; }
-.sheet-name{ font-family:'Playfair Display',serif; font-size:22px;font-weight:700;color:var(--text); margin-bottom:8px;line-height:1.25; }
-.sheet-ingredients{ font-size:12px;color:var(--muted);line-height:1.7; margin-bottom:16px; }
+      .sheet-inner-scroll {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .sheet-content {
+        padding: 14px 22px 0;
+      }
+      .sheet-cat {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--gold);
+        margin-bottom: 5px;
+      }
+      .sheet-name {
+        font-family: "Playfair Display", serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 8px;
+        line-height: 1.25;
+      }
+      .sheet-ingredients {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.7;
+        margin-bottom: 16px;
+      }
 
-.sheet-footer{ flex-shrink:0; padding:14px 22px 30px; border-top:1px solid var(--border); display:flex;align-items:center;gap:10px; background:var(--white); }
-.sheet-price{ font-family:'Playfair Display',serif; font-size:22px;font-weight:700;color:var(--gold); flex-shrink:0; }
-.sheet-price span{ font-family:'Montserrat',sans-serif; font-size:11px;color:var(--muted);font-weight:400; }
-.qty-row{ display:flex;align-items:center; background:var(--cream);border-radius:30px; border:1.5px solid var(--border);overflow:hidden; flex-shrink:0; }
-.qty-btn{ width:36px;height:36px;border:none;background:none; font-size:18px;cursor:pointer;color:var(--text); display:flex;align-items:center;justify-content:center; transition:background .18s, transform .12s; font-weight:500; }
-.qty-btn:hover{background:var(--border)}
-.qty-num{ min-width:28px;text-align:center;font-size:14px;font-weight:700; }
-.qty-num.bump{animation:popIn .2s ease}
-.sheet-add-btn{
-  flex:1;background:var(--green);color:#fff; border:none;border-radius:30px; padding:13px 14px;
-  font-family:'Montserrat',sans-serif; font-size:12px;font-weight:700;letter-spacing:0.8px; cursor:pointer;
-  transition:all .22s, transform .15s; white-space:nowrap; box-shadow:0 3px 14px rgba(26,46,26,0.2);
-}
-.sheet-add-btn:hover{background:var(--green-mid);transform:translateY(-1px);box-shadow:0 6px 20px rgba(26,46,26,0.28)}
-.sheet-add-btn.go-cart{background:var(--gold);box-shadow:0 3px 14px rgba(184,150,46,0.25)}
+      .sheet-footer {
+        flex-shrink: 0;
+        padding: 14px 22px 30px;
+        border-top: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: var(--white);
+      }
+      .sheet-price {
+        font-family: "Playfair Display", serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--gold);
+        flex-shrink: 0;
+      }
+      .sheet-price span {
+        font-family: "Montserrat", sans-serif;
+        font-size: 11px;
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .qty-row {
+        display: flex;
+        align-items: center;
+        background: var(--cream);
+        border-radius: 30px;
+        border: 1.5px solid var(--border);
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .qty-btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: none;
+        font-size: 18px;
+        cursor: pointer;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition:
+          background 0.18s,
+          transform 0.12s;
+        font-weight: 500;
+      }
+      .qty-btn:hover {
+        background: var(--border);
+      }
+      .qty-num {
+        min-width: 28px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: 700;
+      }
+      .qty-num.bump {
+        animation: popIn 0.2s ease;
+      }
+      .sheet-add-btn {
+        flex: 1;
+        background: var(--green);
+        color: #fff;
+        border: none;
+        border-radius: 30px;
+        padding: 13px 14px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        cursor: pointer;
+        transition:
+          all 0.22s,
+          transform 0.15s;
+        white-space: nowrap;
+        box-shadow: 0 3px 14px rgba(26, 46, 26, 0.2);
+      }
+      .sheet-add-btn:hover {
+        background: var(--green-mid);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(26, 46, 26, 0.28);
+      }
+      .sheet-add-btn.go-cart {
+        background: var(--gold);
+        box-shadow: 0 3px 14px rgba(184, 150, 46, 0.25);
+      }
 
-/* TOAST */
-.toast{
-  position:fixed;bottom:80px;left:50%; transform:translateX(-50%) translateY(90px); background:var(--green);color:#fff;
-  border-radius:30px;padding:13px 26px; font-size:12px;font-weight:600; z-index:900;opacity:0;
-  transition:all .38s cubic-bezier(.32,0,.2,1); white-space:nowrap;pointer-events:none;
-  box-shadow:0 6px 24px rgba(26,46,26,0.28); display:flex;align-items:center;gap:8px;
-}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+      /* TOAST */
+      .toast {
+        position: fixed;
+        bottom: 80px;
+        left: 50%;
+        transform: translateX(-50%) translateY(90px);
+        background: var(--green);
+        color: #fff;
+        border-radius: 30px;
+        padding: 13px 26px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 900;
+        opacity: 0;
+        transition: all 0.38s cubic-bezier(0.32, 0, 0.2, 1);
+        white-space: nowrap;
+        pointer-events: none;
+        box-shadow: 0 6px 24px rgba(26, 46, 26, 0.28);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
 
-/* RESPONSIVE */
-@media(max-width:900px){
-  .logo{font-size:24px}
-  .page-header{padding:10px 18px 14px}
-  .filters{ padding:0 18px 22px; flex-wrap:nowrap;overflow-x:auto; scrollbar-width:none; -webkit-overflow-scrolling:touch; }
-  .filters::-webkit-scrollbar{display:none}
-  .filter-pill{flex-shrink:0;padding:9px 16px;font-size:11px}
-  .menu-grid{ grid-template-columns:1fr; gap:14px; padding:0 18px 40px; }
-  .card-img{height:210px}
-  .sheet{height:72vh}
-  .sheet-img-top{height:200px}
-}
-@media(min-width:901px) and (max-width:1100px){ .menu-grid{grid-template-columns:repeat(2,1fr)} }
-@media(min-width:700px){ .sheet{ left:50%;right:auto; width:100%;max-width:540px; transform:translateX(-50%) translateY(100%); } .sheet.open{transform:translateX(-50%) translateY(0)} }
-</style>
-</head>
-<body>
-
-<div class="top-header">
-  <a href="#" class="logo">Gusto <em>&</em> Co.</a>
-</div>
-
-<div class="page-header"><p>premium taomlar</p></div>
-
-<div class="filters">
-  <button class="filter-pill active" data-f="all">Barchasi</button>
-  <button class="filter-pill" data-f="suyuq">Suyuq taomlar</button>
-  <button class="filter-pill" data-f="ikkinchi">Ikkinchi taomlar</button>
-  <button class="filter-pill" data-f="salat">Salatlar</button>
-  <button class="filter-pill" data-f="ichimlik">Ichimliklar</button>
-  <button class="filter-pill" data-f="desert">Desertlar</button>
-</div>
-
-<div class="menu-grid" id="menuGrid"></div>
-
-<div class="bottom-nav">
-  <a href="#menu" class="bottom-nav-item active" onclick="navClick(this, 'menu')">
-    <svg viewBox="0 0 24 24">
-      <rect x="3" y="3" width="7" height="7"></rect>
-      <rect x="14" y="3" width="7" height="7"></rect>
-      <rect x="14" y="14" width="7" height="7"></rect>
-      <rect x="3" y="14" width="7" height="7"></rect>
-    </svg>
-    <span>Menyu</span>
-  </a>
-  
-  <a href="#cart" class="bottom-nav-item" onclick="navClick(this, 'cart')">
-    <svg viewBox="0 0 24 24">
-      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/>
-      <line x1="3" y1="6" x2="21" y2="6"/>
-      <path d="M16 10a4 4 0 01-8 0"/>
-    </svg>
-    <span>Savat</span>
-    <span class="nav-badge" id="cartBadge">0</span>
-  </a>
-
-  <a href="#profile" class="bottom-nav-item" onclick="navClick(this, 'profile')">
-    <svg viewBox="0 0 24 24">
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
-    </svg>
-    <span>Profil</span>
-  </a>
-</div>
-
-<div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
-<div class="sheet" id="sheet">
-  <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
-  <div class="sheet-img-top" id="sheetImgWrap">
-    <img id="sheetImg" src="" alt="">
-  </div>
-  <div class="sheet-inner-scroll">
-    <div class="sheet-content">
-      <div class="sheet-cat" id="sCat"></div>
-      <div class="sheet-name" id="sName"></div>
-      <div class="sheet-ingredients" id="sIngredients"></div>
+      /* RESPONSIVE */
+      @media (max-width: 900px) {
+        .logo {
+          font-size: 24px;
+        }
+        .page-header {
+          padding: 10px 18px 14px;
+        }
+        .filters {
+          padding: 0 18px 22px;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          scrollbar-width: none;
+          -webkit-overflow-scrolling: touch;
+        }
+        .filters::-webkit-scrollbar {
+          display: none;
+        }
+        .filter-pill {
+          flex-shrink: 0;
+          padding: 9px 16px;
+          font-size: 11px;
+        }
+        .menu-grid {
+          grid-template-columns: 1fr;
+          gap: 14px;
+          padding: 0 18px 40px;
+        }
+        .card-img {
+          height: 210px;
+        }
+        .sheet {
+          height: 72vh;
+        }
+        .sheet-img-top {
+          height: 200px;
+        }
+      }
+      @media (min-width: 901px) and (max-width: 1100px) {
+        .menu-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      @media (min-width: 700px) {
+        .sheet {
+          left: 50%;
+          right: auto;
+          width: 100%;
+          max-width: 540px;
+          transform: translateX(-50%) translateY(100%);
+        }
+        .sheet.open {
+          transform: translateX(-50%) translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-header">
+      <a href="#" class="logo">Gusto <em>&</em> Co.</a>
     </div>
-  </div>
-  <div class="sheet-footer">
-    <div class="sheet-price" id="sPrice"></div>
-    <div class="qty-row">
-      <button class="qty-btn" onclick="changeQty(-1)">−</button>
-      <div class="qty-num" id="qtyNum">1</div>
-      <button class="qty-btn" onclick="changeQty(1)">+</button>
+
+    <div class="page-header"><p>premium taomlar</p></div>
+
+    <div class="filters">
+      <button class="filter-pill active" data-f="all">Barchasi</button>
+      <button class="filter-pill" data-f="suyuq">Suyuq taomlar</button>
+      <button class="filter-pill" data-f="ikkinchi">Ikkinchi taomlar</button>
+      <button class="filter-pill" data-f="salat">Salatlar</button>
+      <button class="filter-pill" data-f="ichimlik">Ichimliklar</button>
+      <button class="filter-pill" data-f="desert">Desertlar</button>
     </div>
-    <button class="sheet-add-btn" id="sheetAddBtn" onclick="addFromSheet()">+ Qo'shish</button>
-  </div>
-</div>
 
-<div class="toast" id="toast"></div>
+    <div class="menu-grid" id="menuGrid"></div>
 
-<script>
-const ITEMS = [
-  { id:1,cat:'ikkinchi',catLabel:'Ikkinchi taomlar', name:"Zaytunli Premium Bifsteks", ingredients:"Mol go'shti · Zaytun moyi · Rozmaril · Sarimsoq · Deniz tuzi · Tomat garnir", price:'85 000',badge:'★ Mashhur', img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=80' },
-  { id:2,cat:'suyuq',catLabel:'Suyuq taomlar', name:"Lag'mon Premium", ingredients:"Qo'lda yasalgan lag'mon · Mol go'shti · Piyoz · Ko'k piyoz · Mazali sho'rva", price:'35 000',badge:null, img:'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80' },
-  { id:3,cat:'salat',catLabel:'Salatlar', name:"Toshkent Salati", ingredients:"Yangi sabzavotlar · Norin · Mol tili · Ko'katlar · Zaytun moyi · Limon", price:'28 000',badge:null, img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80' },
-  { id:4,cat:'desert',catLabel:'Desertlar', name:"Tiramisu Royale", ingredients:"Mascarpone · 72% kakao · Kofe aromi · Savoiardi · Vanil · Qaymoq", price:'32 000',badge:'★ Yangi', img:'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80' },
-  { id:5,cat:'ichimlik',catLabel:'Ichimliklar', name:"Saffron Latte", ingredients:"Zarfaron · Oq shokolad · Ko'pik · Sutli espresso · Issiq yoki sovuq", price:'18 000',badge:null, img:'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&q=80' },
-  { id:6,cat:'ikkinchi',catLabel:'Ikkinchi taomlar', name:"Tandoori Tovuq", ingredients:"Tovuq fillet · Tandoori baharat · Yogurt marinadi · Limon · Non bilan", price:'52 000',badge:null, img:'https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&q=80' },
-  { id:7,cat:'suyuq',catLabel:'Suyuq taomlar', name:"Mastava", ingredients:"Guruch · Mol go'shti · Sabzi · Piyoz · Tomat · Ko'k zira · Ko'katlar", price:'22 000',badge:null, img:'https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80' },
-  { id:8,cat:'salat',catLabel:'Salatlar', name:"Caesar Salad Premium", ingredients:"Romaine salat · Parmesan · Krouton · Tuxum · Maxsus Caesar sous", price:'31 000',badge:'★ Top', img:'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800&q=80' },
-  { id:9,cat:'desert',catLabel:'Desertlar', name:"Crème Brûlée", ingredients:"Qaymoq · Tuxum sarig'i · Vanil pod · Shakar karamelizatsiya", price:'26 000',badge:null, img:'https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=800&q=80' },
-  { id:10,cat:'ichimlik',catLabel:'Ichimliklar', name:"Limonchi Choy", ingredients:"Qora choy · Yangi limon · Nana · Zanjabil · Asal · Muz", price:'12 000',badge:null, img:'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&q=80' }
-];
+    <div class="bottom-nav">
+      <a
+        href="#menu"
+        class="bottom-nav-item active"
+        onclick="navClick(this, 'menu')"
+      >
+        <svg viewBox="0 0 24 24">
+          <rect x="3" y="3" width="7" height="7"></rect>
+          <rect x="14" y="3" width="7" height="7"></rect>
+          <rect x="14" y="14" width="7" height="7"></rect>
+          <rect x="3" y="14" width="7" height="7"></rect>
+        </svg>
+        <span>Menyu</span>
+      </a>
 
-let cart={}, activeItem=null, modalQty=1, currentFilter='all';
+      <a href="#" class="bottom-nav-item" onclick="navClick(this, 'cart')">
+        <svg viewBox="0 0 24 24">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+          <line x1="3" y1="6" x2="21" y2="6" />
+          <path d="M16 10a4 4 0 01-8 0" />
+        </svg>
+        <span>Savat</span>
+        <span class="nav-badge" id="cartBadge">0</span>
+      </a>
 
-function renderGrid(){
-  const grid=document.getElementById('menuGrid');
-  grid.innerHTML='';
-  const filtered=currentFilter==='all'?ITEMS:ITEMS.filter(i=>i.cat===currentFilter);
-  filtered.forEach((item,idx)=>{
-    const inCart=cart[item.id]>0;
-    const div=document.createElement('div');
-    div.className='card';
-    div.style.animationDelay=(idx*0.07)+'s';
-    div.onclick=()=>openSheet(item);
-    div.innerHTML=`
+      <a
+        href="{% url 'profile_user' %}"
+        class="bottom-nav-item"
+        onclick="navClick(this, 'profile')"
+      >
+        <svg viewBox="0 0 24 24">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+          <circle cx="12" cy="7" r="4"></circle>
+        </svg>
+        <span>Profil</span>
+      </a>
+    </div>
+
+    <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
+    <div class="sheet" id="sheet">
+      <div class="sheet-handle"><div class="sheet-handle-bar"></div></div>
+      <div class="sheet-img-top" id="sheetImgWrap">
+        <img id="sheetImg" src="" alt="" />
+      </div>
+      <div class="sheet-inner-scroll">
+        <div class="sheet-content">
+          <div class="sheet-cat" id="sCat"></div>
+          <div class="sheet-name" id="sName"></div>
+          <div class="sheet-ingredients" id="sIngredients"></div>
+        </div>
+      </div>
+      <div class="sheet-footer">
+        <div class="sheet-price" id="sPrice"></div>
+        <div class="qty-row">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <div class="qty-num" id="qtyNum">1</div>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <button class="sheet-add-btn" id="sheetAddBtn" onclick="addFromSheet()">
+          + Qo'shish
+        </button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const ITEMS = [
+        {
+          id: 1,
+          cat: "ikkinchi",
+          catLabel: "Ikkinchi taomlar",
+          name: "Zaytunli Premium Bifsteks",
+          ingredients:
+            "Mol go'shti · Zaytun moyi · Rozmaril · Sarimsoq · Deniz tuzi · Tomat garnir",
+          price: "85 000",
+          badge: "★ Mashhur",
+          img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=80",
+        },
+        {
+          id: 2,
+          cat: "suyuq",
+          catLabel: "Suyuq taomlar",
+          name: "Lag'mon Premium",
+          ingredients:
+            "Qo'lda yasalgan lag'mon · Mol go'shti · Piyoz · Ko'k piyoz · Mazali sho'rva",
+          price: "35 000",
+          badge: null,
+          img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80",
+        },
+        {
+          id: 3,
+          cat: "salat",
+          catLabel: "Salatlar",
+          name: "Toshkent Salati",
+          ingredients:
+            "Yangi sabzavotlar · Norin · Mol tili · Ko'katlar · Zaytun moyi · Limon",
+          price: "28 000",
+          badge: null,
+          img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80",
+        },
+        {
+          id: 4,
+          cat: "desert",
+          catLabel: "Desertlar",
+          name: "Tiramisu Royale",
+          ingredients:
+            "Mascarpone · 72% kakao · Kofe aromi · Savoiardi · Vanil · Qaymoq",
+          price: "32 000",
+          badge: "★ Yangi",
+          img: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80",
+        },
+        {
+          id: 5,
+          cat: "ichimlik",
+          catLabel: "Ichimliklar",
+          name: "Saffron Latte",
+          ingredients:
+            "Zarfaron · Oq shokolad · Ko'pik · Sutli espresso · Issiq yoki sovuq",
+          price: "18 000",
+          badge: null,
+          img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&q=80",
+        },
+        {
+          id: 6,
+          cat: "ikkinchi",
+          catLabel: "Ikkinchi taomlar",
+          name: "Tandoori Tovuq",
+          ingredients:
+            "Tovuq fillet · Tandoori baharat · Yogurt marinadi · Limon · Non bilan",
+          price: "52 000",
+          badge: null,
+          img: "https://images.unsplash.com/photo-1599487488170-d11ec9c172f0?w=800&q=80",
+        },
+        {
+          id: 7,
+          cat: "suyuq",
+          catLabel: "Suyuq taomlar",
+          name: "Mastava",
+          ingredients:
+            "Guruch · Mol go'shti · Sabzi · Piyoz · Tomat · Ko'k zira · Ko'katlar",
+          price: "22 000",
+          badge: null,
+          img: "https://images.unsplash.com/photo-1547592180-85f173990554?w=800&q=80",
+        },
+        {
+          id: 8,
+          cat: "salat",
+          catLabel: "Salatlar",
+          name: "Caesar Salad Premium",
+          ingredients:
+            "Romaine salat · Parmesan · Krouton · Tuxum · Maxsus Caesar sous",
+          price: "31 000",
+          badge: "★ Top",
+          img: "https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800&q=80",
+        },
+        {
+          id: 9,
+          cat: "desert",
+          catLabel: "Desertlar",
+          name: "Crème Brûlée",
+          ingredients:
+            "Qaymoq · Tuxum sarig'i · Vanil pod · Shakar karamelizatsiya",
+          price: "26 000",
+          badge: null,
+          img: "https://images.unsplash.com/photo-1470124182917-cc6e71b22ecc?w=800&q=80",
+        },
+        {
+          id: 10,
+          cat: "ichimlik",
+          catLabel: "Ichimliklar",
+          name: "Limonchi Choy",
+          ingredients: "Qora choy · Yangi limon · Nana · Zanjabil · Asal · Muz",
+          price: "12 000",
+          badge: null,
+          img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=800&q=80",
+        },
+      ];
+
+      let cart = {},
+        activeItem = null,
+        modalQty = 1,
+        currentFilter = "all";
+
+      function renderGrid() {
+        const grid = document.getElementById("menuGrid");
+        grid.innerHTML = "";
+        const filtered =
+          currentFilter === "all"
+            ? ITEMS
+            : ITEMS.filter((i) => i.cat === currentFilter);
+        filtered.forEach((item, idx) => {
+          const inCart = cart[item.id] > 0;
+          const div = document.createElement("div");
+          div.className = "card";
+          div.style.animationDelay = idx * 0.07 + "s";
+          div.onclick = () => openSheet(item);
+          div.innerHTML = `
       <div class="card-img" id="ci_${item.id}">
         <img src="${item.img}" alt="${item.name}" loading="lazy">
-        ${item.badge?`<div class="card-badge">${item.badge}</div>`:''}
+        ${item.badge ? `<div class="card-badge">${item.badge}</div>` : ""}
       </div>
       <div class="card-body">
         <div class="card-cat">${item.catLabel}</div>
@@ -382,127 +905,166 @@ function renderGrid(){
         <div class="card-ingredients">${item.ingredients}</div>
         <div class="card-footer">
           <div class="card-price">${item.price} <span>so'm</span></div>
-          <button class="add-btn ${inCart?'in-cart':''}" onclick="quickAdd(event,${item.id})">
-            ${inCart?"✓ Savatda":"+ Qo'shish"}
+          <button class="add-btn ${inCart ? "in-cart" : ""}" onclick="quickAdd(event,${item.id})">
+            ${inCart ? "✓ Savatda" : "+ Qo'shish"}
           </button>
         </div>
       </div>`;
-    grid.appendChild(div);
+          grid.appendChild(div);
 
-    const img=div.querySelector('img');
-    img.onload=()=>{
-      img.classList.add('loaded');
-      document.getElementById('ci_'+item.id).classList.add('img-ready');
-    };
-    if(img.complete&&img.naturalWidth>0){
-      img.classList.add('loaded');
-      document.getElementById('ci_'+item.id).classList.add('img-ready');
-    }
-  });
-}
+          const img = div.querySelector("img");
+          img.onload = () => {
+            img.classList.add("loaded");
+            document.getElementById("ci_" + item.id).classList.add("img-ready");
+          };
+          if (img.complete && img.naturalWidth > 0) {
+            img.classList.add("loaded");
+            document.getElementById("ci_" + item.id).classList.add("img-ready");
+          }
+        });
+      }
 
-function quickAdd(e,id){
-  e.stopPropagation();
-  if(cart[id]){showToast("Allaqachon savatda!");return}
-  cart[id]=1;
-  updateBadge();showToast("✓ Savatga qo'shildi");renderGrid();
-}
+      function quickAdd(e, id) {
+        e.stopPropagation();
+        if (cart[id]) {
+          showToast("Allaqachon savatda!");
+          return;
+        }
+        cart[id] = 1;
+        updateBadge();
+        showToast("✓ Savatga qo'shildi");
+        renderGrid();
+      }
 
-function openSheet(item){
-  activeItem=item; modalQty=cart[item.id]||1;
-  const imgEl=document.getElementById('sheetImg');
-  const wrap=document.getElementById('sheetImgWrap');
-  imgEl.classList.remove('loaded');
-  wrap.classList.remove('img-ready');
-  imgEl.src=item.img;
-  imgEl.onload=()=>{imgEl.classList.add('loaded');wrap.classList.add('img-ready')};
-  if(imgEl.complete&&imgEl.naturalWidth>0){imgEl.classList.add('loaded');wrap.classList.add('img-ready')}
+      function openSheet(item) {
+        activeItem = item;
+        modalQty = cart[item.id] || 1;
+        const imgEl = document.getElementById("sheetImg");
+        const wrap = document.getElementById("sheetImgWrap");
+        imgEl.classList.remove("loaded");
+        wrap.classList.remove("img-ready");
+        imgEl.src = item.img;
+        imgEl.onload = () => {
+          imgEl.classList.add("loaded");
+          wrap.classList.add("img-ready");
+        };
+        if (imgEl.complete && imgEl.naturalWidth > 0) {
+          imgEl.classList.add("loaded");
+          wrap.classList.add("img-ready");
+        }
 
-  document.getElementById('sCat').textContent=item.catLabel;
-  document.getElementById('sName').textContent=item.name;
-  document.getElementById('sIngredients').textContent=item.ingredients;
-  document.getElementById('sPrice').innerHTML=`${item.price} <span>so'm</span>`;
-  document.getElementById('qtyNum').textContent=modalQty;
+        document.getElementById("sCat").textContent = item.catLabel;
+        document.getElementById("sName").textContent = item.name;
+        document.getElementById("sIngredients").textContent = item.ingredients;
+        document.getElementById("sPrice").innerHTML =
+          `${item.price} <span>so'm</span>`;
+        document.getElementById("qtyNum").textContent = modalQty;
 
-  const btn=document.getElementById('sheetAddBtn');
-  if(cart[item.id]){btn.textContent="✓ Savatga o'tish";btn.classList.add('go-cart')}
-  else{btn.textContent="+ Qo'shish";btn.classList.remove('go-cart')}
+        const btn = document.getElementById("sheetAddBtn");
+        if (cart[item.id]) {
+          btn.textContent = "✓ Savatga o'tish";
+          btn.classList.add("go-cart");
+        } else {
+          btn.textContent = "+ Qo'shish";
+          btn.classList.remove("go-cart");
+        }
 
-  document.getElementById('sheetOverlay').classList.add('open');
-  document.getElementById('sheet').classList.add('open');
-  document.body.style.overflow='hidden';
-}
+        document.getElementById("sheetOverlay").classList.add("open");
+        document.getElementById("sheet").classList.add("open");
+        document.body.style.overflow = "hidden";
+      }
 
-function closeSheet(){
-  document.getElementById('sheetOverlay').classList.remove('open');
-  document.getElementById('sheet').classList.remove('open');
-  document.body.style.overflow='';
-}
+      function closeSheet() {
+        document.getElementById("sheetOverlay").classList.remove("open");
+        document.getElementById("sheet").classList.remove("open");
+        document.body.style.overflow = "";
+      }
 
-function changeQty(d){
-  modalQty=Math.max(1,modalQty+d);
-  const el=document.getElementById('qtyNum');
-  el.textContent=modalQty;
-  el.classList.remove('bump');
-  void el.offsetWidth;
-  el.classList.add('bump');
-  setTimeout(()=>el.classList.remove('bump'),200);
-}
+      function changeQty(d) {
+        modalQty = Math.max(1, modalQty + d);
+        const el = document.getElementById("qtyNum");
+        el.textContent = modalQty;
+        el.classList.remove("bump");
+        void el.offsetWidth;
+        el.classList.add("bump");
+        setTimeout(() => el.classList.remove("bump"), 200);
+      }
 
-function addFromSheet(){
-  if(!activeItem)return;
-  if(cart[activeItem.id]){closeSheet(); navClick(document.querySelectorAll('.bottom-nav-item')[1], 'cart'); return}
-  cart[activeItem.id]=modalQty;
-  updateBadge();showToast("✓ Savatga qo'shildi");renderGrid();
-  const btn=document.getElementById('sheetAddBtn');
-  btn.textContent="✓ Savatga o'tish";btn.classList.add('go-cart');
-}
+      function addFromSheet() {
+        if (!activeItem) return;
+        if (cart[activeItem.id]) {
+          closeSheet();
+          navClick(document.querySelectorAll(".bottom-nav-item")[1], "cart");
+          return;
+        }
+        cart[activeItem.id] = modalQty;
+        updateBadge();
+        showToast("✓ Savatga qo'shildi");
+        renderGrid();
+        const btn = document.getElementById("sheetAddBtn");
+        btn.textContent = "✓ Savatga o'tish";
+        btn.classList.add("go-cart");
+      }
 
-function updateBadge(){
-  const n=Object.values(cart).reduce((a,b)=>a+b,0);
-  const b=document.getElementById('cartBadge');
-  b.textContent=n;
-  if(n>0) b.classList.add('show');
-  else b.classList.remove('show');
-}
+      function updateBadge() {
+        const n = Object.values(cart).reduce((a, b) => a + b, 0);
+        const b = document.getElementById("cartBadge");
+        b.textContent = n;
+        if (n > 0) b.classList.add("show");
+        else b.classList.remove("show");
+      }
 
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.innerHTML=`<span style="font-size:15px">${msg.startsWith('✓')?'✓':''}</span> ${msg.replace('✓','').trim()}`;
-  t.classList.add('show');
-  clearTimeout(t._tid);
-  t._tid=setTimeout(()=>t.classList.remove('show'),2200);
-}
+      function showToast(msg) {
+        const t = document.getElementById("toast");
+        t.innerHTML = `<span style="font-size:15px">${msg.startsWith("✓") ? "✓" : ""}</span> ${msg.replace("✓", "").trim()}`;
+        t.classList.add("show");
+        clearTimeout(t._tid);
+        t._tid = setTimeout(() => t.classList.remove("show"), 2200);
+      }
 
-// Navbarga bosilganda aktivlikni boshqarish (Uzum uslubida ichi to'ladi va qorayadi)
-function navClick(element, target) {
-  document.querySelectorAll('.bottom-nav-item').forEach(x => x.classList.remove('active'));
-  element.classList.add('active');
-  
-  if(target === 'cart') {
-    showToast("Savat ochilmoqda...");
-  } else if(target === 'profile') {
-    showToast("Profil ochilmoqda...");
-  } else {
-    showToast("Menyu sahifasi");
-  }
-}
+      // Navbarga bosilganda aktivlikni boshqarish (Uzum uslubida ichi to'ladi va qorayadi)
+      function navClick(element, target) {
+        document
+          .querySelectorAll(".bottom-nav-item")
+          .forEach((x) => x.classList.remove("active"));
+        element.classList.add("active");
 
-document.querySelectorAll('.filter-pill').forEach(p=>{
-  p.addEventListener('click',function(){
-    document.querySelectorAll('.filter-pill').forEach(x=>x.classList.remove('active'));
-    this.classList.add('active');
-    currentFilter=this.dataset.f;
-    renderGrid();
-  });
-});
+        if (target === "cart") {
+          showToast("Savat ochilmoqda...");
+        } else if (target === "profile") {
+          showToast("Profil ochilmoqda...");
+        } else {
+          showToast("Menyu sahifasi");
+        }
+      }
 
-let startY=0;
-const sh=document.getElementById('sheet');
-sh.addEventListener('touchstart',e=>startY=e.touches[0].clientY,{passive:true});
-sh.addEventListener('touchend',e=>{if(e.changedTouches[0].clientY-startY>60)closeSheet()},{passive:true});
+      document.querySelectorAll(".filter-pill").forEach((p) => {
+        p.addEventListener("click", function () {
+          document
+            .querySelectorAll(".filter-pill")
+            .forEach((x) => x.classList.remove("active"));
+          this.classList.add("active");
+          currentFilter = this.dataset.f;
+          renderGrid();
+        });
+      });
 
-renderGrid();
-</script>
-</body>
+      let startY = 0;
+      const sh = document.getElementById("sheet");
+      sh.addEventListener(
+        "touchstart",
+        (e) => (startY = e.touches[0].clientY),
+        { passive: true },
+      );
+      sh.addEventListener(
+        "touchend",
+        (e) => {
+          if (e.changedTouches[0].clientY - startY > 60) closeSheet();
+        },
+        { passive: true },
+      );
+
+      renderGrid();
+    </script>
+  </body>
 </html>
