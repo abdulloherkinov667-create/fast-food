@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Gusto & Co. — Savat</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght=0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#1a2e1a;
+  --green-mid:#2d4a2d;
+  --gold:#b8962e;
+  --cream:#f5f3ec;
+  --white:#ffffff;
+  --text:#1a1a1a;
+  --muted:#6b6b5a;
+  --border:#e0ddd4;
+}
+body{
+  font-family:"Montserrat",sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  min-height:100vh;
+  padding-bottom:180px; /* Checkout bloki sig'ishi uchun */
+  overflow-x:hidden;
+}
+
+/* ── JONLI ANIMATSIYALAR ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes scaleIn {
+  0% { transform: scale(0.92); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes itemRemove {
+  0% { transform: translateX(0); opacity: 1; max-height: 120px; padding: 18px 20px; margin-bottom: 15px; }
+  100% { transform: translateX(-100%); opacity: 0; max-height: 0; padding: 0; margin-bottom: 0; border: none; }
+}
+@keyframes bump {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+/* LOGO HEADER */
+.top-header{text-align:center;padding:24px 20px 10px;background:var(--cream);}
+.logo{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:var(--green);text-decoration:none;display:inline-block;}
+.logo em{font-style:italic}
+
+.page-header { text-align: center; padding: 15px 20px 25px; width: 100%; animation: fadeUp 0.6s ease both; }
+.page-header p { font-size: 13px; letter-spacing: 4px; color: var(--muted); font-weight: 500; text-transform: uppercase; }
+
+/* SAVAT KONTEYNERI */
+.cart-container { max-width: 600px; margin: 0 auto; padding: 0 20px; animation: fadeUp 0.6s 0.1s ease both; }
+
+/* BO'SH SAVAT HOLATI */
+.empty-cart {
+  text-align: center; padding: 60px 20px; display: none;
+  animation: scaleIn 0.5s ease both;
+}
+.empty-cart svg { width: 70px; height: 70px; stroke: var(--muted); stroke-width: 1.5; margin-bottom: 20px; }
+.empty-title { font-family: "Playfair Display", serif; font-size: 22px; font-weight: 600; color: var(--text); margin-bottom: 10px; }
+.empty-text { font-size: 13px; color: var(--muted); margin-bottom: 25px; line-height: 1.6; }
+.go-shop-btn {
+  display: inline-block; background: var(--green); color: #fff; padding: 14px 28px;
+  border-radius: 30px; text-decoration: none; font-size: 12px; font-weight: 700;
+  letter-spacing: 1px; transition: all 0.25s; box-shadow: 0 4px 14px rgba(26,46,26,0.2);
+}
+.go-shop-btn:hover { background: var(--green-mid); transform: translateY(-2px); }
+
+/* SAVAT ELEMENTLARI RO'YXATI */
+.cart-items { display: flex; flex-direction: column; }
+
+.cart-item {
+  display: flex; align-items: center; gap: 15px; background: var(--white);
+  border: 1px solid var(--border); border-radius: 20px; padding: 18px 20px;
+  margin-bottom: 15px; position: relative; overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+  transition: all 0.3s ease;
+}
+.cart-item.removing { animation: itemRemove 0.4s ease forwards; }
+
+.item-img-wrap { width: 68px; height: 68px; border-radius: 12px; overflow: hidden; background: #e8e5dc; flex-shrink: 0; }
+.item-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+
+.item-details { flex: 1; min-width: 0; }
+.item-name { font-family: "Playfair Display", serif; font-size: 16px; font-weight: 600; color: var(--text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.item-price { font-family: "Playfair Display", serif; font-size: 16px; font-weight: 700; color: var(--gold); }
+.item-price span { font-family: "Montserrat", sans-serif; font-size: 10px; color: var(--muted); }
+
+/* QUANTITY CONTROLLER */
+.qty-control { display: flex; align-items: center; background: var(--cream); border-radius: 30px; border: 1px solid var(--border); overflow: hidden; height: 34px; flex-shrink: 0; }
+.qty-btn { width: 32px; height: 100%; border: none; background: none; font-size: 16px; cursor: pointer; color: var(--text); display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
+.qty-btn:hover { background: var(--border); }
+.qty-val { min-width: 28px; text-align: center; font-size: 13px; font-weight: 700; }
+.qty-val.bump { animation: bump 0.2s ease; }
+
+/* DELETE BUTTON */
+.delete-btn { background: none; border: none; cursor: pointer; color: #c0392b; padding: 5px; display: flex; align-items: center; justify-content: center; margin-left: 5px; transition: transform 0.2s; }
+.delete-btn:hover { transform: scale(1.15); }
+.delete-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+/* TOTAL & CHECKOUT PANEL */
+.checkout-panel {
+  position: fixed; bottom: 64px; left: 0; right: 0; background: #fff;
+  border-top: 1px solid var(--border); padding: 16px 20px 20px; z-index: 390;
+  box-shadow: 0 -8px 30px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 14px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+.checkout-inner { max-width: 560px; margin: 0 auto; width: 100%; }
+.summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+.summary-label { font-size: 13px; color: var(--muted); font-weight: 500; }
+.summary-total { font-family: "Playfair Display", serif; font-size: 22px; font-weight: 700; color: var(--green); }
+.summary-total span { font-family: "Montserrat", sans-serif; font-size: 12px; }
+
+.order-submit-btn {
+  width: 100%; background: var(--green); color: #fff; border: none; border-radius: 30px;
+  padding: 15px; font-family: "Montserrat", sans-serif; font-size: 13px; font-weight: 700;
+  letter-spacing: 1px; cursor: pointer; transition: all 0.25s;
+  box-shadow: 0 4px 15px rgba(26,46,26,0.2);
+}
+.order-submit-btn:hover { background: var(--green-mid); transform: translateY(-1px); }
+.order-submit-btn:active { transform: translateY(0); }
+
+/* ── UZUM STYLE PASTKI NAVBAR (URL'LAR TUZATILDI) ── */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
+  background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border); display: flex; justify-content: space-around; align-items: center; z-index: 400;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+}
+.bottom-nav-item {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: var(--muted); text-decoration: none; font-size: 10px; font-weight: 500; gap: 4px; flex: 1; height: 100%; position: relative;
+  transition: color 0.2s; cursor: pointer;
+}
+.bottom-nav-item svg {
+  width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; transition: fill 0.2s, color 0.2s;
+}
+.bottom-nav-item:hover, .bottom-nav-item.active { color: var(--text); }
+.bottom-nav-item.active svg { fill: currentColor; }
+.bottom-nav-item.active span { font-weight: 600; }
+
+.nav-badge {
+  position: absolute; top: 6px; right: calc(50% - 20px);
+  background: var(--gold); color: #fff; min-width: 16px; height: 16px;
+  border-radius: 8px; font-size: 9px; font-weight: 700; display: none;
+  align-items: center; justify-content: center; padding: 0 4px;
+}
+.nav-badge.show { display: flex; }
+
+/* TOAST MESSAGE */
+.toast{
+  position:fixed;bottom:195px;left:50%;transform:translateX(-50%) translateY(90px);
+  background:var(--green);color:#fff;border-radius:30px;padding:13px 26px;
+  font-size:12px;font-weight:600;z-index:900;opacity:0;
+  transition:all 0.38s cubic-bezier(0.32, 0, 0.2, 1); box-shadow:0 6px 24px rgba(26,46,26,0.25);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<div class="top-header">
+  <a href="#" class="logo">Gusto <em>&</em> Co.</a>
+</div>
+
+<div class="page-header">
+  <p>Sizning savatchangiz</p>
+</div>
+
+<div class="cart-container">
+  <div class="cart-items" id="cartList"></div>
+
+  <div class="empty-cart" id="emptyCart">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 01-8 0"></path></svg>
+    <div class="empty-title">Savatchangiz bo'sh</div>
+    <div class="empty-text">Siz hali hech narsa buyurtma qilmadingiz.<br>Menyudan ajoyib premium taomlarni tanlashingiz mumkin.</div>
+    <a href="{% url 'menu_home' %}" class="go-shop-btn">Taomlarni tanlash</a>
+  </div>
+</div>
+
+<div class="checkout-panel" id="checkoutPanel">
+  <div class="checkout-inner">
+    <div class="summary-row">
+      <span class="summary-label">Umumiy qiymat:</span>
+      <span class="summary-total" id="grandTotal">0 <span>so'm</span></span>
+    </div>
+    <button class="order-submit-btn" onclick="showToast('✓ Buyurtma muvaffaqiyatli qabul qilindi!')">Buyurtmani rasmiylashtirish</button>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <a href="{% url 'menu_home' %}" class="bottom-nav-item" onclick="navClick(this, 'menu')">
+    <svg viewBox="0 0 24 24">
+      <rect x="3" y="3" width="7" height="7"></rect>
+      <rect x="14" y="3" width="7" height="7"></rect>
+      <rect x="14" y="14" width="7" height="7"></rect>
+      <rect x="3" y="14" width="7" height="7"></rect>
+    </svg>
+    <span>Menyu</span>
+  </a>
+
+  <a href="{% url 'savat_page' %}" class="bottom-nav-item active" onclick="navClick(this, 'cart')">
+    <svg viewBox="0 0 24 24">
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <path d="M16 10a4 4 0 01-8 0" />
+    </svg>
+    <span>Savat</span>
+    <span class="nav-badge show" id="cartBadge">0</span>
+  </a>
+
+  <a href="{% url 'profile_user' %}" class="bottom-nav-item" onclick="navClick(this, 'profile')">
+    <svg viewBox="0 0 24 24">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+    <span>Profil</span>
+  </a>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// Namuna sifatida savat ichidagi dastlabki taomlar ma'lumotlari
+let cartData = [
+  { id: 1, name: "Zaytunli Premium Bifsteks", price: 85000, qty: 1, img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=160&q=80" },
+  { id: 2, name: "Ramen Premium Ugra", price: 45000, qty: 2, img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=160&q=80" }
+];
+
+function formatPrice(num) {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+function renderCart() {
+  const list = document.getElementById("cartList");
+  const empty = document.getElementById("emptyCart");
+  const panel = document.getElementById("checkoutPanel");
+  const badge = document.getElementById("cartBadge");
+
+  if (cartData.length === 0) {
+    list.innerHTML = "";
+    empty.style.display = "block";
+    panel.style.display = "none";
+    badge.style.display = "none";
+    document.body.style.paddingBottom = "90px";
+    return;
+  }
+
+  empty.style.display = "none";
+  panel.style.display = "flex";
+  list.innerHTML = "";
+  document.body.style.paddingBottom = "180px";
+
+  let totalSum = 0;
+  let totalItems = 0;
+
+  cartData.forEach((item) => {
+    totalSum += item.price * item.qty;
+    totalItems += item.qty;
+
+    const div = document.createElement("div");
+    div.className = "cart-item";
+    div.id = `item_${item.id}`;
+    div.innerHTML = `
+      <div class="item-img-wrap">
+        <img src="${item.img}" alt="${item.name}">
+      </div>
+      <div class="item-details">
+        <div class="item-name">${item.name}</div>
+        <div class="item-price">${formatPrice(item.price * item.qty)} <span>so'm</span></div>
+      </div>
+      <div class="qty-control">
+        <button class="qty-btn" onclick="updateQty(${item.id}, -1)">−</button>
+        <div class="qty-val" id="val_${item.id}">${item.qty}</div>
+        <button class="qty-btn" onclick="updateQty(${item.id}, 1)">+</button>
+      </div>
+      <button class="delete-btn" onclick="removeItem(${item.id})">
+        <svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+      </button>
+    `;
+    list.appendChild(div);
+  });
+
+  document.getElementById("grandTotal").innerHTML = `${formatPrice(totalSum)} <span>so'm</span>`;
+  badge.textContent = totalItems;
+  badge.style.display = "flex";
+}
+
+function updateQty(id, change) {
+  const item = cartData.find(i => i.id === id);
+  if (!item) return;
+
+  const newVal = item.qty + change;
+  if (newVal < 1) {
+    removeItem(id);
+    return;
+  }
+
+  item.qty = newVal;
+  
+  const valEl = document.getElementById(`val_${id}`);
+  if(valEl) {
+    valEl.textContent = item.qty;
+    valEl.classList.remove("bump");
+    void valEl.offsetWidth; 
+    valEl.classList.add("bump");
+  }
+  
+  setTimeout(renderCart, 100);
+}
+
+function removeItem(id) {
+  const itemEl = document.getElementById(`item_${id}`);
+  if (itemEl) {
+    itemEl.classList.add("removing");
+    setTimeout(() => {
+      cartData = cartData.filter(i => i.id !== id);
+      renderCart();
+      showToast("Element savatdan o'chirildi");
+    }, 350);
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  clearTimeout(t._tid);
+  t._tid = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function navClick(element, target) {
+  document.querySelectorAll('.bottom-nav-item').forEach(x => x.classList.remove('active'));
+  element.classList.add('active');
+  if (target === 'menu') showToast('Menyu yuklanmoqda...');
+  if (target === 'profile') showToast('Profil ochilmoqda...');
+}
+
+renderCart();
+</script>
+</body>
+</html>
