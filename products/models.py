@@ -19,7 +19,7 @@ class FastFoodProduct(BaseCreateModel):
     name = models.CharField(max_length=500)
     price = models.DecimalField("Maxsulot narxi: ", max_digits=10, decimal_places=2)
     ingredients = models.TextField("Tarkibi: ", max_length=4000)
-    count = models.PositiveIntegerField(default=1, verbose_name="Miqdori")    
+    count = models.PositiveIntegerField(default=1, verbose_name="necha dona borr")    
     category_product = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="food_products")
     product_image = models.ImageField(upload_to="products/images/")
     is_active = models.BooleanField(default=True)

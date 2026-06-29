@@ -35,7 +35,7 @@
         padding-bottom: 90px;
       }
 
-      /* ── JONLI ANIMATSIYALAR ── */
+      /* ── ANIMATSIYALAR ── */
       @keyframes shimmer {
         0% { background-position: -400px 0; }
         100% { background-position: 400px 0; }
@@ -55,7 +55,7 @@
         100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(184, 150, 46, 0); }
       }
 
-      /* LOGO HEADER */
+      /* HEADER */
       .top-header {
         text-align: center;
         padding: 24px 20px 10px;
@@ -71,7 +71,6 @@
       }
       .logo em { font-style: italic; }
 
-      /* PAGE HEADER — TO'G'RILANDI (MARKAZDA MUSTAHKAM TURADI) */
       .page-header {
         text-align: center;
         padding: 20px 20px 15px;
@@ -88,7 +87,7 @@
         text-transform: uppercase;
       }
 
-      /* FILTERS — DESKTOPDA MARKAZDA, MOBILDA SURILADIGAN QILINDI */
+      /* FILTERS */
       .filters {
         padding: 0 40px 30px;
         display: flex;
@@ -122,7 +121,7 @@
         box-shadow: 0 4px 14px rgba(26, 46, 26, 0.2);
       }
 
-      /* GRID MAKET */
+      /* GRID */
       .menu-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -132,7 +131,7 @@
         margin: 0 auto;
       }
 
-      /* TAOM KARTASI (CARD) */
+      /* CARD */
       .card {
         background: var(--white);
         border-radius: 18px;
@@ -174,7 +173,6 @@
       }
       .card-body { padding: 20px; }
       
-      /* RASMDAGI SARIQ "SUYUQ TAOMLAR" USLUBI KUCHAYTIRILDI */
       .card-cat {
         font-size: 10px;
         font-weight: 700;
@@ -219,7 +217,7 @@
       .add-btn:hover { background: var(--green-mid); transform: scale(1.04); }
       .add-btn.in-cart { background: var(--gold); }
 
-      /* BOTTOM SHEET MODAL */
+      /* MODAL (BOTTOM SHEET) */
       .sheet-overlay {
         position: fixed; inset: 0; z-index: 500; background: rgba(0, 0, 0, 0);
         pointer-events: none; transition: background 0.32s ease, backdrop-filter 0.32s ease;
@@ -274,7 +272,7 @@
       .sheet-add-btn:hover { background: var(--green-mid); transform: translateY(-1px); }
       .sheet-add-btn.go-cart { background: var(--gold); box-shadow: 0 4px 14px rgba(184, 150, 46, 0.25); }
 
-      /* UZUM STYLE PASTKI NAVBAR */
+      /* NAVBAR */
       .bottom-nav {
         position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
         background: rgba(255, 255, 255, 0.97); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -292,7 +290,6 @@
       .bottom-nav-item.active svg { fill: currentColor; }
       .bottom-nav-item.active span { font-weight: 600; }
 
-      /* PULSASIYALI SAVAT BADGE */
       .nav-badge {
         position: absolute; top: 6px; right: calc(50% - 22px);
         background: var(--gold); color: #fff; min-width: 16px; height: 16px;
@@ -302,7 +299,6 @@
       }
       .nav-badge.show { display: flex; }
 
-      /* TOAST */
       .toast {
         position: fixed; bottom: 85px; left: 50%; transform: translateX(-50%) translateY(90px);
         background: var(--green); color: #fff; border-radius: 30px; padding: 13px 26px;
@@ -312,7 +308,7 @@
       }
       .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-      /* RESPONSIVE MOSLASHUVLAR */
+      /* RESPONSIVE */
       @media (max-width: 900px) {
         .page-header { padding: 15px 15px 8px; }
         .filters {
@@ -338,7 +334,7 @@
   <body>
 
     <div class="top-header">
-      <a href="#" class="logo">Gusto <em>&</em> Co.</a>
+      <a href="{% url 'menu_home' %}" class="logo">Gusto <em>&</em> Co.</a>
     </div>
 
     <div class="page-header">
@@ -347,17 +343,15 @@
 
     <div class="filters">
       <button class="filter-pill active" data-f="all">Barchasi</button>
-      <button class="filter-pill" data-f="suyuq">Suyuq taomlar</button>
-      <button class="filter-pill" data-f="ikkinchi">Ikkinchi taomlar</button>
-      <button class="filter-pill" data-f="salat">Salatlar</button>
-      <button class="filter-pill" data-f="ichimlik">Ichimliklar</button>
-      <button class="filter-pill" data-f="desert">Desertlar</button>
+      {% for category in categories %}
+        <button class="filter-pill" data-f="{{ category.id }}">{{ category.name }}</button>
+      {% endfor %}
     </div>
 
     <div class="menu-grid" id="menuGrid"></div>
 
     <div class="bottom-nav">
-      <a href="#menu" class="bottom-nav-item active" onclick="navClick(this, 'menu')">
+      <a href="{% url 'menu_home' %}" class="bottom-nav-item active">
         <svg viewBox="0 0 24 24">
           <rect x="3" y="3" width="7" height="7"></rect>
           <rect x="14" y="3" width="7" height="7"></rect>
@@ -367,7 +361,7 @@
         <span>Menyu</span>
       </a>
 
-      <a href="{% url 'savat_page' %}" class="bottom-nav-item" onclick="navClick(this, 'cart')">
+      <a href="{% url 'savat_page' %}" class="bottom-nav-item">
         <svg viewBox="0 0 24 24">
           <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -377,7 +371,7 @@
         <span class="nav-badge" id="cartBadge">0</span>
       </a>
 
-      <a href="{% url 'profile_user' %}" class="bottom-nav-item" onclick="navClick(this, 'profile')">
+      <a href="{% url 'profile_user' %}" class="bottom-nav-item">
         <svg viewBox="0 0 24 24">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
           <circle cx="12" cy="7" r="4"></circle>
@@ -414,56 +408,18 @@
 
     <script>
       const ITEMS = [
+        {% for product in products %}
         {
-          id: 1,
-          cat: "ikkinchi",
-          catLabel: "Ikkinchi taomlar",
-          name: "Zaytunli Premium Bifsteks",
-          ingredients: "Mol go'shti · Zaytun moyi · Rozmaril · Sarimsoq · Deniz tuzi · Tomat garnir",
-          price: "85 000",
-          badge: "★ Mashhur",
-          img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=800&q=80",
+          id: {{ product.id }},
+          cat: "{{ product.category_product.id }}",
+          catLabel: "{{ product.category_product.name }}",
+          name: "{{ product.name }}",
+          ingredients: "{{ product.ingredients|escapejs }}",
+          price: "{{ product.price }}",
+          badge: {% if product.count < 5 %}"★ Tugamoqda"{% else %}null{% endif %},
+          img: "{{ product.product_image.url }}",
         },
-        {
-          id: 2,
-          cat: "suyuq",
-          catLabel: "Suyuq taomlar",
-          name: "Ramen Premium Ugra",
-          ingredients: "Yapon uslubidagi ugra · Maxsus qaynatilgan tuxum · Ko'k no'xat · kunjut ziravorlari",
-          price: "45 000",
-          badge: "★ Top",
-          img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=800&q=80",
-        },
-        {
-          id: 3,
-          cat: "salat",
-          catLabel: "Salatlar",
-          name: "Toshkent Salati",
-          ingredients: "Yangi sabzavotlar · Norin · Mol tili · Ko'katlar · Zaytun moyi · Limon",
-          price: "28 000",
-          badge: null,
-          img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=800&q=80",
-        },
-        {
-          id: 4,
-          cat: "desert",
-          catLabel: "Desertlar",
-          name: "Tiramisu Royale",
-          ingredients: "Mascarpone · 72% kakao · Kofe aromi · Savoiardi · Vanil · Qaymoq",
-          price: "32 000",
-          badge: "★ Yangi",
-          img: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=800&q=80",
-        },
-        {
-          id: 5,
-          cat: "ichimlik",
-          catLabel: "Ichimliklar",
-          name: "Saffron Latte",
-          ingredients: "Zarfaron · Oq shokolad · Ko'pik · Sutli espresso · Issiq yoki sovuq",
-          price: "18 000",
-          badge: null,
-          img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=800&q=80",
-        }
+        {% endfor %}
       ];
 
       let cart = {}, activeItem = null, modalQty = 1, currentFilter = "all";
@@ -473,6 +429,11 @@
         grid.innerHTML = "";
         const filtered = currentFilter === "all" ? ITEMS : ITEMS.filter((i) => i.cat === currentFilter);
         
+        if(filtered.length === 0) {
+          grid.innerHTML = "<p style='text-align:center; grid-column: 1/-1; color: var(--muted); padding: 40px;'>Bu kategoriyada mahsulot topilmadi.</p>";
+          return;
+        }
+
         filtered.forEach((item, idx) => {
           const inCart = cart[item.id] > 0;
           const div = document.createElement("div");
@@ -489,7 +450,7 @@
               <div class="card-name">${item.name}</div>
               <div class="card-ingredients">${item.ingredients}</div>
               <div class="card-footer">
-                <div class="card-price">${item.price} <span>so'm</span></div>
+                <div class="card-price">${parseFloat(item.price).toLocaleString('uz-UZ')} <span>so'm</span></div>
                 <button class="add-btn ${inCart ? "in-cart" : ""}" onclick="quickAdd(event,${item.id})">
                   ${inCart ? "✓ Savatda" : "+ Qo'shish"}
                 </button>
@@ -535,7 +496,7 @@
         document.getElementById("sCat").textContent = item.catLabel;
         document.getElementById("sName").textContent = item.name;
         document.getElementById("sIngredients").textContent = item.ingredients;
-        document.getElementById("sPrice").innerHTML = `${item.price} <span>so'm</span>`;
+        document.getElementById("sPrice").innerHTML = `${parseFloat(item.price).toLocaleString('uz-UZ')} <span>so'm</span>`;
         document.getElementById("qtyNum").textContent = modalQty;
 
         const btn = document.getElementById("sheetAddBtn");
@@ -571,7 +532,7 @@
         if (!activeItem) return;
         if (cart[activeItem.id]) {
           closeSheet();
-          navClick(document.querySelectorAll(".bottom-nav-item")[1], "cart");
+          window.location.href = "{% url 'savat_page' %}";
           return;
         }
         cart[activeItem.id] = modalQty;
@@ -596,14 +557,6 @@
         t.classList.add("show");
         clearTimeout(t._tid);
         t._tid = setTimeout(() => t.classList.remove("show"), 2200);
-      }
-
-      function navClick(element, target) {
-        document.querySelectorAll(".bottom-nav-item").forEach((x) => x.classList.remove("active"));
-        element.classList.add("active");
-        if (target === "cart") showToast("Savat ochilmoqda...");
-        else if (target === "profile") showToast("Profil ochilmoqda...");
-        else showToast("Menyu sahifasi");
       }
 
       document.querySelectorAll(".filter-pill").forEach((p) => {
