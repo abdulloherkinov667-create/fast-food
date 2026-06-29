@@ -11,7 +11,4 @@ urlpatterns = [
     path('', menu_home, name='menu_home'),
     path("profil/", profile_page, name='profile_user'),
     path("savat_page/", savat_page, name='savat_page'),
-]
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
