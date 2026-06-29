@@ -33,13 +33,23 @@
         padding-bottom: 90px;
       }
 
+      /* ANIMATSIYALAR */
       @keyframes popIn {
         0% { transform: scale(0.95); opacity: 0; }
         100% { transform: scale(1); opacity: 1; }
       }
       @keyframes fadeUp {
-        from { opacity: 0; transform: translateY(20px); }
+        from { opacity: 0; transform: translateY(24px); }
         to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes badgePulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+      }
+      @keyframes flyEffect {
+        0% { transform: translate(0, 0) scale(1); opacity: 1; }
+        100% { transform: translate(var(--fly-x), var(--fly-y)) scale(0.2); opacity: 0; }
       }
 
       /* HEADER */
@@ -55,7 +65,9 @@
         color: var(--green);
         text-decoration: none;
         display: inline-block;
+        transition: transform 0.3s ease;
       }
+      .logo:hover { transform: scale(1.02); }
       .logo em { font-style: italic; }
 
       .page-header {
@@ -89,12 +101,20 @@
         background: var(--white);
         color: var(--text);
         cursor: pointer;
-        transition: all 0.22s;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .filter-pill:hover {
+        border-color: var(--gold);
+        transform: translateY(-1px);
+      }
+      .filter-pill:active {
+        transform: translateY(1px);
       }
       .filter-pill.active {
         background: var(--green);
         color: #fff;
         border-color: var(--green);
+        box-shadow: 0 4px 12px rgba(26, 46, 26, 0.15);
       }
 
       /* GRID */
@@ -114,11 +134,15 @@
         overflow: hidden;
         border: 1px solid var(--border);
         cursor: pointer;
-        transition: transform 0.35s, box-shadow 0.35s;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.4s ease;
       }
       .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+        transform: translateY(-6px);
+        border-color: var(--border);
+        box-shadow: 0 20px 35px rgba(26, 46, 26, 0.06);
+      }
+      .card:active {
+        transform: translateY(-2px) scale(0.98);
       }
       .card-img {
         position: relative;
@@ -128,8 +152,11 @@
       }
       .card-img img {
         width: 100%; height: 100%; object-fit: cover; display: block;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      /* Rasm yuklanmasa placeholder */
+      .card:hover .card-img img {
+        transform: scale(1.05);
+      }
       .card-img img[src=""], .card-img img:not([src]) {
         display: none;
       }
@@ -160,36 +187,56 @@
         font-family: "Playfair Display", serif; font-size: 18px; font-weight: 700; color: var(--gold);
       }
       .card-price span { font-family: "Montserrat", sans-serif; font-size: 11px; color: var(--muted); }
+      
       .add-btn {
         background: var(--green); color: #fff; border: none; border-radius: 30px;
-        padding: 8px 16px; font-size: 11px; font-weight: 700; cursor: pointer;
-        transition: background 0.2s;
+        padding: 9px 18px; font-size: 11px; font-weight: 700; cursor: pointer;
+        transition: all 0.25s ease;
+        position: relative;
+        overflow: hidden;
       }
-      .add-btn.in-cart { background: var(--gold); }
+      .add-btn:hover {
+        background: var(--green-mid);
+        box-shadow: 0 4px 10px rgba(26, 46, 26, 0.15);
+      }
+      .add-btn.in-cart { 
+        background: var(--gold); 
+        animation: popIn 0.3s ease;
+      }
 
       /* ===== MODAL (BOTTOM SHEET) ===== */
       .sheet-overlay {
         position: fixed; inset: 0; z-index: 500;
-        background: rgba(0,0,0,0); pointer-events: none; transition: background 0.3s ease;
+        background: rgba(0,0,0,0); pointer-events: none; 
+        transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .sheet-overlay.open {
-        background: rgba(0,0,0,0.5); pointer-events: all; backdrop-filter: blur(2px);
+        background: rgba(26, 46, 26, 0.4); pointer-events: all; backdrop-filter: blur(4px);
       }
       .sheet {
         position: fixed; left: 0; right: 0; bottom: 0; z-index: 501;
         background: var(--white); border-radius: 24px 24px 0 0;
-        transform: translateY(100%); transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        transform: translateY(100%); 
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         display: flex; flex-direction: column; max-height: 90vh;
-        box-shadow: 0 -10px 40px rgba(0,0,0,0.15);
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.08);
       }
       .sheet.open { transform: translateY(0); }
 
       .sheet-handle {
-        display: flex; justify-content: center; padding: 12px 0 8px; cursor: pointer; flex-shrink: 0;
+        display: flex; justify-content: center; padding: 14px 0 10px; cursor: pointer; flex-shrink: 0;
       }
-      .sheet-handle-bar { width: 45px; height: 4px; border-radius: 2px; background: var(--border); }
+      .sheet-handle-bar { width: 45px; height: 5px; border-radius: 3px; background: var(--border); transition: background 0.2s; }
+      .sheet-handle:hover .sheet-handle-bar { background: var(--muted); }
 
-      /* Modal rasm — go'zal proporsiya */
+      /* Modal ochilganda ichidagi elementlar ketma ket chiqishi uchun */
+      .sheet.open .sheet-animate {
+        animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      .sheet.open .sheet-delay-1 { animation-delay: 0.05s; }
+      .sheet.open .sheet-delay-2 { animation-delay: 0.1s; }
+      .sheet.open .sheet-delay-3 { animation-delay: 0.15s; }
+
       .sheet-img-wrap {
         flex-shrink: 0;
         width: 100%;
@@ -201,21 +248,18 @@
       .sheet-img-wrap img {
         width: 100%; height: 100%; object-fit: cover; display: block;
       }
-      /* Rasm yo'q bo'lsa placeholder emoji */
       .sheet-img-placeholder {
         position: absolute; inset: 0;
         display: flex; align-items: center; justify-content: center;
         font-size: 72px;
       }
 
-      /* Modal scroll qismi */
       .sheet-inner-scroll {
         overflow-y: auto;
         flex: 1;
         padding: 0;
       }
 
-      /* Mahsulot ma'lumotlari — yangi go'zal dizayn */
       .sheet-info {
         padding: 24px 24px 16px;
       }
@@ -238,7 +282,6 @@
         line-height: 1.25;
       }
 
-      /* Tarkib bo'limi — alohida styled */
       .sheet-ingredients-block {
         background: var(--cream);
         border-radius: 14px;
@@ -254,7 +297,6 @@
         font-weight: 400;
       }
 
-      /* Tag'lar — tarkib bo'laklari */
       .sheet-tags {
         display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;
       }
@@ -262,9 +304,13 @@
         background: var(--white); border: 1px solid var(--border);
         border-radius: 20px; padding: 5px 12px;
         font-size: 11px; color: var(--muted); font-weight: 500;
+        transition: all 0.2s;
+      }
+      .sheet-tag:hover {
+        border-color: var(--gold);
+        color: var(--gold);
       }
 
-      /* Footer */
       .sheet-footer {
         padding: 18px 24px 34px;
         border-top: 1px solid var(--border);
@@ -292,41 +338,49 @@
         width: 100%; background: var(--green); color: #fff; border: none;
         border-radius: 14px; padding: 16px;
         font-family: "Montserrat", sans-serif; font-size: 14px; font-weight: 700;
-        cursor: pointer; transition: all 0.2s ease; letter-spacing: 0.5px;
+        cursor: pointer; transition: all 0.25s ease; letter-spacing: 0.5px;
+        box-shadow: 0 4px 12px rgba(26, 46, 26, 0.15);
       }
-      .sheet-add-btn:hover { background: var(--green-mid); }
+      .sheet-add-btn:hover { 
+        background: var(--green-mid); 
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(26, 46, 26, 0.2);
+      }
+      .sheet-add-btn:active { transform: translateY(1px); }
 
-      /* Savatga qo'shilgandan keyin */
       .cart-managed-row {
         display: flex; align-items: center; justify-content: space-between;
         width: 100%; gap: 12px;
-        animation: popIn 0.25s ease both;
+        animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
       }
       .sheet-added-status-btn {
         flex: 1; background: #f0f5f0; color: var(--green); border: 2px solid var(--green);
-        border-radius: 14px; padding: 16px;
+        border-radius: 14px; padding: 15px;
         font-family: "Montserrat", sans-serif; font-size: 14px; font-weight: 700;
         text-align: center; letter-spacing: 0.5px;
       }
       .qty-selector {
         display: flex; align-items: center; justify-content: space-between;
         background: var(--green); color: #fff; border-radius: 14px;
-        padding: 6px 6px; width: 126px; height: 52px; flex-shrink: 0;
+        padding: 6px; width: 130px; height: 52px; flex-shrink: 0;
+        box-shadow: 0 4px 12px rgba(26, 46, 26, 0.15);
       }
       .qty-btn {
         width: 40px; height: 40px; border: none;
-        background: rgba(255,255,255,0.15); color: #fff;
+        background: rgba(255,255,255,0.12); color: #fff;
         font-size: 20px; font-weight: 600; border-radius: 10px;
         cursor: pointer; display: flex; align-items: center; justify-content: center;
-        transition: background 0.2s;
+        transition: background 0.2s, transform 0.1s;
       }
-      .qty-btn:hover { background: rgba(255,255,255,0.25); }
+      .qty-btn:hover { background: rgba(255,255,255,0.22); }
+      .qty-btn:active { transform: scale(0.9); }
       .qty-num { font-size: 17px; font-weight: 700; min-width: 24px; text-align: center; }
 
       /* NAVBAR */
       .bottom-nav {
         position: fixed; bottom: 0; left: 0; right: 0; height: 68px;
-        background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+        background: rgba(255,255,255,0.94); backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
         border-top: 1px solid var(--border);
         display: flex; justify-content: space-around; align-items: center; z-index: 400;
       }
@@ -334,26 +388,49 @@
         display: flex; flex-direction: column; align-items: center; justify-content: center;
         color: var(--muted); text-decoration: none; font-size: 10px; font-weight: 500;
         gap: 4px; flex: 1; height: 100%; position: relative;
+        transition: color 0.2s ease;
       }
-      .bottom-nav-item svg { width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 2; }
+      .bottom-nav-item svg { 
+        width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 2; 
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      .bottom-nav-item:active svg { transform: scale(0.85); }
       .bottom-nav-item.active { color: var(--text); font-weight: 600; }
-      .bottom-nav-item.active svg { fill: currentColor; }
+      .bottom-nav-item.active svg { fill: currentColor; transform: scale(1.05); }
+      
       .nav-badge {
         position: absolute; top: 6px; right: calc(50% - 22px);
-        background: var(--gold); color: #fff; min-width: 16px; height: 16px;
-        border-radius: 8px; font-size: 9px; font-weight: 800;
-        display: none; align-items: center; justify-content: center; padding: 0 4px;
+        background: var(--gold); color: #fff; min-width: 18px; height: 18px;
+        border-radius: 9px; font-size: 10px; font-weight: 800;
+        display: none; align-items: center; justify-content: center; padding: 0 5px;
+        border: 1.5px solid var(--white);
       }
-      .nav-badge.show { display: flex; }
+      .nav-badge.show { display: flex; animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+      .nav-badge.pulse { animation: badgePulse 0.3s ease-in-out; }
 
+      /* TOAST */
       .toast {
         position: fixed; bottom: 85px; left: 50%;
         transform: translateX(-50%) translateY(90px);
         background: var(--green); color: #fff; border-radius: 30px;
         padding: 13px 26px; font-size: 12px; font-weight: 600;
-        z-index: 900; opacity: 0; transition: all 0.3s ease; white-space: nowrap;
+        z-index: 900; opacity: 0; 
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.3s ease;
+        white-space: nowrap;
+        box-shadow: 0 8px 24px rgba(26, 46, 26, 0.2);
       }
       .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+      /* FLYING PARTICLE EFFECT ELEMENT */
+      .fly-particle {
+        position: fixed;
+        width: 20px; height: 20px;
+        background: var(--gold);
+        border-radius: 50%;
+        z-index: 9999;
+        pointer-events: none;
+        opacity: 0;
+      }
 
       /* RESPONSIVE */
       @media (max-width: 900px) {
@@ -407,7 +484,7 @@
              data-ingredients="{{ product.ingredients }}"
              data-price="{{ product.price }}"
              data-img="{{ product.image_url }}"
-             onclick="openSheet(this)">
+             onclick="handleCardClick(event, this)">
           <div class="card-img">
             {% if product.image_url %}
               <img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy"
@@ -426,7 +503,7 @@
                 {{ product.price|floatformat:0 }} <span>so'm</span>
               </div>
               <button class="add-btn"
-                      onclick="quickAdd(event, '{{ product.id }}', '{{ product.name }}')">
+                      onclick="quickAdd(event, this, '{{ product.id }}', '{{ product.name }}')">
                 + Qo'shish
               </button>
             </div>
@@ -439,8 +516,7 @@
       {% endfor %}
     </div>
 
-    <!-- BOTTOM NAV -->
-    <div class="bottom-nav">
+    <div class="bottom-nav" id="bottomNav">
       <a href="{% url 'menu_home' %}" class="bottom-nav-item active">
         <svg viewBox="0 0 24 24">
           <rect x="3" y="3" width="7" height="7"></rect>
@@ -450,7 +526,7 @@
         </svg>
         <span>Menyu</span>
       </a>
-      <a href="{% url 'savat_page' %}" class="bottom-nav-item">
+      <a href="{% url 'savat_page' %}" class="bottom-nav-item" id="cartNavBtn">
         <svg viewBox="0 0 24 24">
           <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
           <line x1="3" y1="6" x2="21" y2="6" />
@@ -468,39 +544,33 @@
       </a>
     </div>
 
-    <!-- BOTTOM SHEET MODAL -->
     <div class="sheet-overlay" id="sheetOverlay" onclick="closeSheet()"></div>
     <div class="sheet" id="sheet">
       <div class="sheet-handle" onclick="closeSheet()">
         <div class="sheet-handle-bar"></div>
       </div>
 
-      <!-- Rasm -->
-      <div class="sheet-img-wrap" id="sheetImgWrap">
+      <div class="sheet-img-wrap sheet-animate" id="sheetImgWrap">
         <img id="sheetImg" src="" alt=""
              onerror="this.style.display='none'; document.getElementById('sheetImgPlaceholder').style.display='flex'">
         <div class="sheet-img-placeholder" id="sheetImgPlaceholder" style="display:none;">🍽️</div>
       </div>
 
-      <!-- Scroll qism -->
       <div class="sheet-inner-scroll">
         <div class="sheet-info">
-          <div class="sheet-cat" id="sCat"></div>
-          <div class="sheet-name" id="sName"></div>
+          <div class="sheet-cat sheet-animate sheet-delay-1" id="sCat"></div>
+          <div class="sheet-name sheet-animate sheet-delay-1" id="sName"></div>
 
-          <!-- Tarkib bloki -->
-          <div class="sheet-ingredients-block">
+          <div class="sheet-ingredients-block sheet-animate sheet-delay-2">
             <div class="sheet-ingredients-label">Tarkibi</div>
             <div class="sheet-ingredients-text" id="sIngredients"></div>
           </div>
 
-          <!-- Tag'lar (avtomatik) -->
-          <div class="sheet-tags" id="sTags"></div>
+          <div class="sheet-tags sheet-animate sheet-delay-2" id="sTags"></div>
         </div>
       </div>
 
-      <!-- Footer: narx + tugma -->
-      <div class="sheet-footer">
+      <div class="sheet-footer sheet-animate sheet-delay-3">
         <div class="footer-price-row">
           <div class="sheet-price-label">Narxi</div>
           <div class="sheet-price" id="sPrice"></div>
@@ -519,6 +589,14 @@
         let num = parseFloat(val);
         if (isNaN(num)) return val;
         return num.toLocaleString('uz-UZ') + " <span>so'm</span>";
+      }
+
+      // Kartaga bosilganda animatsiya ozgina kechikib ishlashi uchun boshqaruv
+      function handleCardClick(e, cardEl) {
+        // Agar bosilgan narsa tugma bo'lsa, modalni ochmaymiz
+        if (e.target.closest('.add-btn')) return;
+        
+        openSheet(cardEl);
       }
 
       // Karta ustiga bosilganda modal ochiladi
@@ -589,12 +667,15 @@
           `;
         } else {
           container.innerHTML = `
-            <button class="sheet-add-btn" onclick="addFromSheet()">Savatga qo'shish</button>
+            <button class="sheet-add-btn" onclick="addFromSheet(this)">Savatga qo'shish</button>
           `;
         }
       }
 
-      function addFromSheet() {
+      function addFromSheet(btnEl) {
+        // Savatga uchish effektini chaqiramiz
+        animateFlyToCart(btnEl);
+        
         cart[currentActiveProductName] = 1;
         updateBadge();
         renderModalButtons();
@@ -613,16 +694,60 @@
         updateCardButtons();
       }
 
-      function quickAdd(e, id, name) {
+      function quickAdd(e, btnEl, id, name) {
         e.stopPropagation();
         if (cart[name]) {
           showToast('Allaqachon savatda!');
           return;
         }
+        
+        // Animatsiyani chaqirish
+        animateFlyToCart(btnEl);
+        
         cart[name] = 1;
         updateBadge();
         showToast('✓ Savatga qo\'shildi');
         updateCardButtons();
+      }
+
+      // Fly to Cart (Savatga uchish animatsiyasi)
+      function animateFlyToCart(startElement) {
+        const cartBtn = document.getElementById('cartNavBtn');
+        if (!cartBtn) return;
+
+        const startRect = startElement.getBoundingClientRect();
+        const endRect = cartBtn.getBoundingClientRect();
+
+        // Uchuvchi element yaratish
+        const particle = document.createElement('div');
+        particle.className = 'fly-particle';
+        document.body.appendChild(particle);
+
+        // Boshlang'ich koordinatalar
+        const startX = startRect.left + startRect.width / 2 - 10;
+        const startY = startRect.top + startRect.height / 2 - 10;
+        
+        // Yakuniy koordinatalar ayirmasi
+        const flyX = (endRect.left + endRect.width / 2) - (startX + 10);
+        const flyY = (endRect.top + endRect.height / 2) - (startY + 10);
+
+        particle.style.left = `${startX}px`;
+        particle.style.top = `${startY}px`;
+        particle.style.setProperty('--fly-x', `${flyX}px`);
+        particle.style.setProperty('--fly-y', `${flyY}px`);
+
+        // Animatsiyani ishga tushirish
+        particle.style.animation = 'flyEffect 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+
+        // Tugagandan so'ng elementni o'chirish
+        setTimeout(() => {
+          particle.remove();
+          // Badge'ga qo'shimcha sakrash effekti berish
+          const badge = document.getElementById('cartBadge');
+          badge.classList.remove('pulse');
+          void badge.offsetWidth; // trigger reflow
+          badge.classList.add('pulse');
+        }, 600);
       }
 
       function updateCardButtons() {
@@ -666,9 +791,11 @@
           document.querySelectorAll('.filter-pill').forEach(x => x.classList.remove('active'));
           this.classList.add('active');
           const filter = this.getAttribute('data-f');
+          
           document.querySelectorAll('.card').forEach(card => {
             if (filter === 'all' || card.getAttribute('data-cat') === filter) {
               card.style.display = 'block';
+              card.style.animation = 'popIn 0.4s ease forwards';
             } else {
               card.style.display = 'none';
             }
@@ -686,5 +813,3 @@
     </script>
   </body>
 </html>
-
-
