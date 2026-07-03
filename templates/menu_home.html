@@ -194,6 +194,8 @@
         transition: all 0.25s ease;
         position: relative;
         overflow: hidden;
+        text-decoration: none;
+        display: inline-block;
       }
       .add-btn:hover {
         background: var(--green-mid);
@@ -229,7 +231,6 @@
       .sheet-handle-bar { width: 45px; height: 5px; border-radius: 3px; background: var(--border); transition: background 0.2s; }
       .sheet-handle:hover .sheet-handle-bar { background: var(--muted); }
 
-      /* Modal ochilganda ichidagi elementlar ketma ket chiqishi uchun */
       .sheet.open .sheet-animate {
         animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
       }
@@ -244,6 +245,14 @@
         background: linear-gradient(135deg, #e8e5dc 0%, #d4cfc4 100%);
         overflow: hidden;
         position: relative;
+      }
+      .sheet-img-wrap::after {
+        content: '';
+        position: absolute;
+        left: 0; bottom: 0; right: 0;
+        height: 60px;
+        background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, var(--white) 100%);
+        pointer-events: none;
       }
       .sheet-img-wrap img {
         width: 100%; height: 100%; object-fit: cover; display: block;
@@ -335,6 +344,7 @@
 
       .action-container { width: 100%; }
       .sheet-add-btn {
+        display: block; text-align: center; text-decoration: none;
         width: 100%; background: var(--green); color: #fff; border: none;
         border-radius: 14px; padding: 16px;
         font-family: "Montserrat", sans-serif; font-size: 14px; font-weight: 700;
@@ -355,7 +365,7 @@
       }
       .sheet-added-status-btn {
         flex: 1; background: #f0f5f0; color: var(--green); border: 2px solid var(--green);
-        border-radius: 14px; padding: 15px;
+        border-radius: 14px; padding: 15px; text-decoration: none;
         font-family: "Montserrat", sans-serif; font-size: 14px; font-weight: 700;
         text-align: center; letter-spacing: 0.5px;
       }
@@ -412,14 +422,21 @@
       .toast {
         position: fixed; bottom: 85px; left: 50%;
         transform: translateX(-50%) translateY(90px);
-        background: var(--green); color: #fff; border-radius: 30px;
-        padding: 13px 26px; font-size: 12px; font-weight: 600;
+        background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+        color: #fff; border-radius: 999px;
+        padding: 13px 24px; font-size: 12px; font-weight: 700;
         z-index: 900; opacity: 0; 
         transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.3s ease;
         white-space: nowrap;
-        box-shadow: 0 8px 24px rgba(26, 46, 26, 0.2);
+        box-shadow: 0 10px 28px rgba(26, 46, 26, 0.2);
+        border: 1px solid rgba(255,255,255,0.18);
+        letter-spacing: 0.3px;
       }
       .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      .toast.profile-toast {
+        background: linear-gradient(135deg, var(--gold) 0%, #d2aa3b 100%);
+        box-shadow: 0 12px 30px rgba(184, 150, 46, 0.25);
+      }
 
       /* FLYING PARTICLE EFFECT ELEMENT */
       .fly-particle {
@@ -458,6 +475,14 @@
     </style>
   </head>
   <body>
+
+    {% if messages %}
+      <div id="django-messages" style="display: none;">
+        {% for message in messages %}
+          <span class="django-msg-item">{{ message }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
 
     <div class="top-header">
       <a href="{% url 'menu_home' %}" class="logo">Gusto <em>&</em> Co.</a>
@@ -502,16 +527,16 @@
               <div class="card-price">
                 {{ product.price|floatformat:0 }} <span>so'm</span>
               </div>
-              <button class="add-btn"
-                      onclick="quickAdd(event, this, '{{ product.id }}', '{{ product.name }}')">
+              <a href="{% url 'savat_page' %}" class="add-btn" id="btn-{{ product.id }}"
+                 onclick="quickAdd(event, this, '{{ product.id }}', '{{ product.name }}')">
                 + Qo'shish
-              </button>
+              </a>
             </div>
           </div>
         </div>
       {% empty %}
         <p style="text-align:center; grid-column: 1/-1; color: var(--muted); padding: 40px;">
-          Hozircha mahsulotlar mavjud emas.
+          Hozircha mahsulotlar mevjud emas.
         </p>
       {% endfor %}
     </div>
@@ -535,7 +560,7 @@
         <span>Savat</span>
         <span class="nav-badge" id="cartBadge">0</span>
       </a>
-      <a href="{% url 'profile_user' %}" class="bottom-nav-item">
+      <a href="{% url 'profile_user' %}" class="bottom-nav-item" onclick="showProfileToast(event, this)">
         <svg viewBox="0 0 24 24">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
           <circle cx="12" cy="7" r="4"></circle>
@@ -585,21 +610,33 @@
       let cart = {};
       let currentActiveProductName = null;
 
+      // SIZ SO'RAGAN QISM: Django'dan kelgan "Ro'yxatdan o'tdingiz" xabarini Toast qilib chiqarish
+      window.addEventListener('DOMContentLoaded', () => {
+        const msgContainer = document.getElementById('django-messages');
+        if (msgContainer) {
+          const msgItem = msgContainer.querySelector('.django-msg-item');
+          if (msgItem && msgItem.textContent.trim() !== '') {
+            // Profil ochilayotgandek chiroyli oltin rangli toast chiqaradi
+            const t = document.getElementById('toast');
+            t.innerHTML = `🎉 ${msgItem.textContent}`;
+            t.classList.add('show', 'profile-toast');
+            clearTimeout(t._tid);
+            t._tid = setTimeout(() => t.classList.remove('show', 'profile-toast'), 3000);
+          }
+        }
+      });
+
       function formatPrice(val) {
         let num = parseFloat(val);
         if (isNaN(num)) return val;
         return num.toLocaleString('uz-UZ') + " <span>so'm</span>";
       }
 
-      // Kartaga bosilganda animatsiya ozgina kechikib ishlashi uchun boshqaruv
       function handleCardClick(e, cardEl) {
-        // Agar bosilgan narsa tugma bo'lsa, modalni ochmaymiz
         if (e.target.closest('.add-btn')) return;
-        
         openSheet(cardEl);
       }
 
-      // Karta ustiga bosilganda modal ochiladi
       function openSheet(cardEl) {
         const name        = cardEl.dataset.name;
         const catName     = cardEl.dataset.catName;
@@ -609,7 +646,6 @@
 
         currentActiveProductName = name;
 
-        // Rasm
         const imgEl = document.getElementById('sheetImg');
         const placeholder = document.getElementById('sheetImgPlaceholder');
 
@@ -623,17 +659,15 @@
           placeholder.style.display = 'flex';
         }
 
-        // Ma'lumotlar
         document.getElementById('sCat').textContent = catName;
         document.getElementById('sName').textContent = name;
         document.getElementById('sIngredients').textContent = ingredients;
         document.getElementById('sPrice').innerHTML = formatPrice(price);
 
-        // Tarkibdan avtomatik tag'lar (vergul bilan ajratilgan)
         const tagsContainer = document.getElementById('sTags');
         tagsContainer.innerHTML = '';
         if (ingredients) {
-          const parts = ingredients.split(',').slice(0, 6); // max 6 ta
+          const parts = ingredients.split(',').slice(0, 6);
           parts.forEach(part => {
             const t = part.trim();
             if (t) {
@@ -657,7 +691,7 @@
         if (cart[currentActiveProductName]) {
           container.innerHTML = `
             <div class="cart-managed-row">
-              <div class="sheet-added-status-btn">✓ Savatda</div>
+              <a href="{% url 'savat_page' %}" class="sheet-added-status-btn">Savatga o'tish</a>
               <div class="qty-selector">
                 <button class="qty-btn" onclick="changeQty(-1)">−</button>
                 <div class="qty-num">${cart[currentActiveProductName]}</div>
@@ -673,9 +707,7 @@
       }
 
       function addFromSheet(btnEl) {
-        // Savatga uchish effektini chaqiramiz
         animateFlyToCart(btnEl);
-        
         cart[currentActiveProductName] = 1;
         updateBadge();
         renderModalButtons();
@@ -695,22 +727,19 @@
       }
 
       function quickAdd(e, btnEl, id, name) {
-        e.stopPropagation();
         if (cart[name]) {
-          showToast('Allaqachon savatda!');
-          return;
+          return; 
         }
+        e.preventDefault();
+        e.stopPropagation();
         
-        // Animatsiyani chaqirish
         animateFlyToCart(btnEl);
-        
         cart[name] = 1;
         updateBadge();
         showToast('✓ Savatga qo\'shildi');
         updateCardButtons();
       }
 
-      // Fly to Cart (Savatga uchish animatsiyasi)
       function animateFlyToCart(startElement) {
         const cartBtn = document.getElementById('cartNavBtn');
         if (!cartBtn) return;
@@ -718,16 +747,13 @@
         const startRect = startElement.getBoundingClientRect();
         const endRect = cartBtn.getBoundingClientRect();
 
-        // Uchuvchi element yaratish
         const particle = document.createElement('div');
         particle.className = 'fly-particle';
         document.body.appendChild(particle);
 
-        // Boshlang'ich koordinatalar
         const startX = startRect.left + startRect.width / 2 - 10;
         const startY = startRect.top + startRect.height / 2 - 10;
         
-        // Yakuniy koordinatalar ayirmasi
         const flyX = (endRect.left + endRect.width / 2) - (startX + 10);
         const flyY = (endRect.top + endRect.height / 2) - (startY + 10);
 
@@ -736,16 +762,13 @@
         particle.style.setProperty('--fly-x', `${flyX}px`);
         particle.style.setProperty('--fly-y', `${flyY}px`);
 
-        // Animatsiyani ishga tushirish
         particle.style.animation = 'flyEffect 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
 
-        // Tugagandan so'ng elementni o'chirish
         setTimeout(() => {
           particle.remove();
-          // Badge'ga qo'shimcha sakrash effekti berish
           const badge = document.getElementById('cartBadge');
           badge.classList.remove('pulse');
-          void badge.offsetWidth; // trigger reflow
+          void badge.offsetWidth; 
           badge.classList.add('pulse');
         }, 600);
       }
@@ -755,7 +778,7 @@
           const name = card.dataset.name;
           const btn = card.querySelector('.add-btn');
           if (cart[name]) {
-            btn.textContent = '✓ Savatda';
+            btn.textContent = 'Savatga o\'tish';
             btn.classList.add('in-cart');
           } else {
             btn.textContent = '+ Qo\'shish';
@@ -780,12 +803,24 @@
       function showToast(msg) {
         const t = document.getElementById('toast');
         t.textContent = msg;
+        t.classList.remove('profile-toast');
         t.classList.add('show');
         clearTimeout(t._tid);
         t._tid = setTimeout(() => t.classList.remove('show'), 2200);
       }
 
-      // Filtr
+      function showProfileToast(event, linkEl) {
+        event.preventDefault();
+        const t = document.getElementById('toast');
+        t.innerHTML = '👤 Profil ochilmoqda...';
+        t.classList.add('show', 'profile-toast');
+        clearTimeout(t._tid);
+        t._tid = setTimeout(() => {
+          t.classList.remove('show', 'profile-toast');
+          window.location.href = linkEl.href;
+        }, 900);
+      }
+
       document.querySelectorAll('.filter-pill').forEach(pill => {
         pill.addEventListener('click', function () {
           document.querySelectorAll('.filter-pill').forEach(x => x.classList.remove('active'));
@@ -803,7 +838,6 @@
         });
       });
 
-      // Swipe down to close
       let startY = 0;
       const sh = document.getElementById('sheet');
       sh.addEventListener('touchstart', e => (startY = e.touches[0].clientY), { passive: true });

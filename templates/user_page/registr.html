@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Gusto & Co. — Ro'yxatdan o'tish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      :root {
+        --green: #1a2e1a;
+        --green-mid: #2d4a2d;
+        --gold: #b8962e;
+        --cream: #f5f3ec;
+        --white: #ffffff;
+        --text: #1a1a1a;
+        --muted: #8e8e80;
+        --border: #e0ddd4;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        background: var(--white);
+        color: var(--text);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      @keyframes fadeUp {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+
+      /* TOP BAR (ORQAGA TUGMA VA LOGO) */
+      .top-bar {
+        display: flex;
+        align-items: center;
+        margin-bottom: 40px;
+        position: relative;
+      }
+      
+      .back-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: var(--cream);
+        color: var(--green);
+        text-decoration: none;
+        font-size: 20px;
+        font-weight: 600;
+        border: 1px solid var(--border);
+      }
+      
+      .back-btn:active {
+        background: var(--border);
+      }
+
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--green);
+        text-decoration: none;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .logo em { font-style: italic; }
+
+      /* FORM USLUBI */
+      .auth-form-wrap {
+        animation: fadeUp 0.5s ease both;
+      }
+
+      .auth-title {
+        font-family: "Playfair Display", serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--green);
+        margin-bottom: 6px;
+      }
+
+      .auth-subtitle {
+        font-size: 13px;
+        color: var(--muted);
+        margin-bottom: 35px;
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      .form-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+
+      .form-input {
+        width: 100%;
+        background: var(--cream);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text);
+        outline: none;
+        transition: all 0.25s ease;
+        -webkit-appearance: none;
+      }
+
+      .form-input:focus {
+        border-color: var(--gold);
+        background: var(--white);
+        box-shadow: 0 0 0 4px rgba(184, 150, 46, 0.1);
+      }
+
+      .submit-btn {
+        width: 100%;
+        background: var(--green);
+        color: var(--white);
+        border: none;
+        border-radius: 14px;
+        padding: 16px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(26, 46, 26, 0.15);
+        margin-top: 15px;
+      }
+
+      .submit-btn:active {
+        background: var(--green-mid);
+        transform: scale(0.98);
+      }
+
+      .auth-footer {
+        text-align: center;
+        margin-top: 30px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .auth-footer a {
+        color: var(--gold);
+        text-decoration: none;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div class="top-bar">
+      <a href="{% url 'menu_home' %}" class="back-btn">&#10216;</a>
+      <a href="{% url 'menu_home' %}" class="logo">Gusto <em>&</em> Co.</a>
+    </div>
+
+    <div class="auth-form-wrap">
+      <h1 class="auth-title">Ro'yxatdan o'tish</h1>
+      <p class="auth-subtitle">Premium taomlar olamiga xush kelibsiz</p>
+
+      <form id="registerForm" method="POST" autocomplete="off">
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label class="form-label" for="fullname">Ism va familiya</label>
+          <input class="form-input" type="text" id="fullname" name="fullname" placeholder="John Doe" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phone">Telefon raqam</label>
+          <input class="form-input" type="tel" id="phone" name="phone" value="+998 " required />
+        </div>
+
+        <button type="submit" class="submit-btn">Davom etish</button>
+      </form>
+
+      <div class="auth-footer">
+        Profilingiz bormi? <a href="#">Tizimga kirish</a>
+      </div>
+    </div>
+
+    <script>
+      // 1. TELEFON FORMATLASH SCRIPT (BAGSIZ VARIANTI)
+      const phoneInput = document.getElementById('phone');
+
+      phoneInput.addEventListener('input', function () {
+        let input = phoneInput.value.replace(/\D/g, '');
+        
+        if (!input.startsWith('998')) {
+          input = '998' + input;
+        }
+
+        input = input.substring(0, 12);
+
+        let formatted = '+';
+        if (input.length > 0) formatted += input.substring(0, 3);    // 998
+        if (input.length > 3) formatted += ' ' + input.substring(3, 5); // 2 ta (Kod)
+        if (input.length > 5) formatted += ' ' + input.substring(5, 8); // 3 ta
+        if (input.length > 8) formatted += ' ' + input.substring(8, 10); // 2 ta
+        if (input.length > 10) formatted += ' ' + input.substring(10, 12); // 2 ta
+
+        phoneInput.value = formatted;
+      });
+
+      phoneInput.addEventListener('keydown', function (e) {
+        if (phoneInput.value.length <= 5 && e.key === 'Backspace') {
+          e.preventDefault();
+        }
+      });
+
+      phoneInput.addEventListener('focus', function () {
+        setTimeout(() => {
+          phoneInput.setSelectionRange(phoneInput.value.length, phoneInput.value.length);
+        }, 10);
+      });
+
+
+      // 2. DRF API-GA FETCH ORQALI MA'LUMOT JO'NATISH VA REDIRECT QILISH
+      document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Sahifa yangilanib ketishini to'xtatadi
+
+        const fullName = document.getElementById('fullname').value;
+        const phoneNumber = document.getElementById('phone').value;
+
+        const data = {
+          full_name: fullName,
+          phone_number: phoneNumber
+        };
+
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        // DRF-da yozilgan api url manziliga post so'rovi yuborish
+        fetch('/api/register/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(res => {
+          if (res.success) {
+            // Ro'yxatdan muvaffaqiyatli o'tgach, menyuga qaytaradi (redirect)
+            window.location.href = res.redirect_url || "{% url 'menu_home' %}";
+          } else {
+            // Validatsiya xatolarini ko'rsatish
+            if (res.errors && res.errors.phone_number) {
+              alert(res.errors.phone_number[0]);
+            } else {
+              alert("Xatolik yuz berdi, qaytadan urinib ko'ring.");
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert("Server bilan aloqa uzildi.");
+        });
+      });
+    </script>
+
+  </body>
+</html>
