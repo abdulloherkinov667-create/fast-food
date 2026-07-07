@@ -373,7 +373,10 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
     </a>
   </div>
 
-  <button class="logout-btn" onclick="showToast('Chiqish bajarilmoqda...')">Tizimdan chiqish</button>
+  <form method="post" action="{% url 'logout_user' %}" style="width:100%;">
+    {% csrf_token %}
+    <button type="submit" class="logout-btn" onclick="showToast('Chiqish bajarilmoqda...')">Tizimdan chiqish</button>
+  </form>
   <div style="height:30px"></div>
 
 </div>

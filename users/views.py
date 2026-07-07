@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,8 +9,13 @@ from .serializers import UserSerializer
 
 
 def profile_page(request):
-    latest_user = User.objects.order_by("-id").first()
-    return render(request, "user_page/profil_page.html", {"user": latest_user})
+    profile_user_id = request.session.get("profile_user_id")
+    profile_user = None
+
+    if profile_user_id:
+        profile_user = User.objects.filter(id=profile_user_id).first()
+
+    return render(request, "user_page/profil_page.html", {"user": profile_user})
 
 
 def savat_page(request):
@@ -20,11 +25,20 @@ def register_page(request):
     return render(request, "user_page/registr.html")
 
 
+def logout_page(request):
+    if request.method == "POST":
+        request.session.flush()
+        messages.success(request, "Tizimdan chiqdingiz.")
+    return redirect("register_user")
+
+
 class RegisterAPIView(APIView):
     def post(self, request, format=None):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+            request.session["profile_user_id"] = user.id
+            request.session.modified = True
             messages.success(request, "Ro'yxatdan  muvoffiqiyatli o'tdingiz!")
             return Response(
                 {
