@@ -151,14 +151,45 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
 }
 .order-item:hover .order-img-wrap{transform:scale(1.1) rotate(2deg);}
 
-/* LOGOUT BUTTON */
+/* LOGOUT TUGMASI */
 .logout-btn{
-  width:100%;background:none;border:2px solid #c0392b;color:#c0392b;
+  display:block;width:100%;background:none;border:2px solid #c0392b;color:#c0392b;
   border-radius:35px;padding:16px;font-family:"Montserrat",sans-serif;font-size:14px;font-weight:700;
-  cursor:pointer;letter-spacing:1px;transition:all 0.3s;margin-top:10px;
+  cursor:pointer;letter-spacing:1px;transition:all 0.3s;text-align:center;
 }
 .logout-btn:hover{background:#c0392b;color:#fff;box-shadow:0 8px 20px rgba(192,57,43,0.3);transform:translateY(-3px);}
 .logout-btn:active{transform:translateY(0) scale(0.98);}
+
+/* LOGOUT MODAL - ekran markazida kichkina popup */
+.logout-modal{
+  border:none;border-radius:20px;padding:22px;
+  width:88%;max-width:320px;
+  background:var(--white);
+  box-shadow:0 20px 50px rgba(0,0,0,0.25);
+  animation:popIn 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.logout-modal::backdrop{
+  background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+}
+.confirm-title{font-size:16px;font-weight:700;color:var(--green);margin-bottom:8px;font-family:"Playfair Display",serif;}
+.confirm-text{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px;}
+.confirm-actions{display:flex;gap:10px;}
+.confirm-actions form{flex:1;margin:0;}
+.confirm-btn{display:inline-flex;align-items:center;justify-content:center;width:100%;border:none;border-radius:999px;padding:11px 14px;font-family:"Montserrat",sans-serif;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:all 0.3s;}
+.confirm-yes{background:var(--green);color:#fff;}
+.confirm-yes:hover{transform:translateY(-2px);background:var(--green-mid);}
+.confirm-no{background:var(--white);color:var(--text);border:1px solid var(--border);flex:1;}
+.confirm-no:hover{background:var(--cream);transform:translateY(-2px);}
+
+.guest-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:28px 22px;text-align:center;box-shadow:0 8px 20px rgba(0,0,0,0.04);}
+.guest-icon{width:60px;height:60px;border-radius:50%;background:rgba(26,46,26,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
+.guest-icon svg{width:28px;height:28px;stroke:var(--green);fill:none;stroke-width:2;}
+.guest-title{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--green);margin-bottom:8px;}
+.guest-text{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.register-btn{display:inline-block;background:var(--gold);color:#fff;text-decoration:none;border-radius:999px;padding:12px 20px;font-weight:700;transition:all 0.3s;}
+.register-btn:hover{transform:translateY(-2px);background:#a27f1d;}
 
 
 /* ── UZUM STYLE PASTKI NAVBAR (MENU_HOME BILAN BIR XIL) ── */
@@ -268,22 +299,17 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
 
 <div class="profile-container">
 
+  {% if user %}
   <div class="profile-hero">
     <div class="hero-blob1"></div>
     <div class="hero-blob2"></div>
     <div class="hero-inner">
       <div class="avatar-wrap">
-        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="{% if user %}{{ user.full_name }}{% else %}Profil{% endif %}">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="{{ user.full_name }}">
       </div>
-      <div class="hero-name">
-        {% if user %}
-          {{ user.full_name }}
-        {% else %}
-          Profil ma'lumotlari yo'q
-        {% endif %}
-      </div>
+      <div class="hero-name">{{ user.full_name }}</div>
       <div class="hero-phone">
-        {% if user and user.phone_number %}
+        {% if user.phone_number %}
           {{ user.phone_number }}
         {% else %}
           Telefon raqami kiritilmagan
@@ -373,10 +399,33 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
     </a>
   </div>
 
-  <form method="post" action="{% url 'logout_user' %}" style="width:100%;">
-    {% csrf_token %}
-    <button type="submit" class="logout-btn" onclick="showToast('Chiqish bajarilmoqda...')">Tizimdan chiqish</button>
-  </form>
+  <button type="button" class="logout-btn" onclick="document.getElementById('logoutModal').showModal()">Tizimdan chiqish</button>
+
+  <dialog id="logoutModal" class="logout-modal">
+    <div class="confirm-title">Akkauntdan chiqmoqchimisiz?</div>
+    <div class="confirm-text">Haqiqatan ham shu akkauntdan chiqishni xohlaysizmi?</div>
+    <div class="confirm-actions">
+      <button type="button" class="confirm-btn confirm-no" onclick="document.getElementById('logoutModal').close()">Yo'q</button>
+      <form method="post" action="{% url 'logout_user' %}">
+        {% csrf_token %}
+        <button type="submit" class="confirm-btn confirm-yes">Ha</button>
+      </form>
+    </div>
+  </dialog>
+
+  {% else %}
+  <div class="guest-card">
+    <div class="guest-icon">
+      <svg viewBox="0 0 24 24">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
+    </div>
+    <div class="guest-title">Akkauntingiz yo‘q</div>
+    <div class="guest-text">Profilni ko‘rish va buyurtmalarni kuzatish uchun ro‘yxatdan o‘ting.</div>
+    <a href="{% url 'register_user' %}" class="register-btn">Ro‘yxatdan o‘tish</a>
+  </div>
+  {% endif %}
   <div style="height:30px"></div>
 
 </div>
