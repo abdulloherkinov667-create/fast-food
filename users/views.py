@@ -1,19 +1,26 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import User
-from .serializers import UserSerializer
+from rest_framework.permissions import AllowAny
+from django.contrib.auth import get_user_model
+from products.serializers import RegisterSerializer
 
+from products.serializers import LoginSerializer
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login, logout
+from .models import Users
 
 def profile_page(request):
-    profile_user_id = request.session.get("profile_user_id")
+    # Prefer Django authentication user when available, fallback to session-stored id
     profile_user = None
-
-    if profile_user_id:
-        profile_user = User.objects.filter(id=profile_user_id).first()
+    if request.user and request.user.is_authenticated:
+        profile_user = request.user
+    else:
+        profile_user_id = request.session.get("profile_user_id")
+        if profile_user_id:
+            profile_user = Users.objects.filter(id=profile_user_id).first()
 
     return render(request, "user_page/profil_page.html", {"user": profile_user})
 
@@ -21,32 +28,47 @@ def profile_page(request):
 def savat_page(request):
     return render(request, "user_page/savat.html")
 
-def register_page(request):
-    return render(request, "user_page/registr.html")
+
+def registratsiya_page(request):
+    return render(request, "loginlar/registratsiya.html")
 
 
-def logout_page(request):
-    if request.method == "POST":
-        request.session.flush()
-        messages.success(request, "Tizimdan chiqdingiz.")
-    return redirect("register_user")
+def login_page(request):
+    return render(request, "loginlar/login.html")
 
 
-class RegisterAPIView(APIView):
-    def post(self, request, format=None):
-        serializer = UserSerializer(data=request.data)
+class RegisterView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():
-            user = serializer.save()
-            request.session["profile_user_id"] = user.id
-            request.session.modified = True
-            messages.success(request, "Ro'yxatdan  muvoffiqiyatli o'tdingiz!")
+            serializer.save()
             return Response(
-                {
-                    "success": True,
-                    "message": "Ro'yxatdan  muvoffiqiyatli o'tdingiz!",
-                    "redirect_url": reverse("menu_home"),
-                },
-                status=status.HTTP_201_CREATED,
+                {"message": "Muvaffaqiyatli ro'yxatdan o'tdingiz! Login sahifasiga yo'naltiriladi."}, 
+                status=status.HTTP_201_CREATED
             )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
+class LoginView(APIView):
+    permission_classes = [AllowAny]
 
-        return Response({"success": False, "errors": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data["user"]
+            login(request, user)  # Session orqali tizimga kirish
+            return Response(
+                {"message": "Tizimga muvaffaqiyatli kirdingiz! Asosiy sahifaga yo'naltiriladi."}, 
+                status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+def logout_user(request):
+    """Log out the current user and redirect to home."""
+    if request.method == "POST":
+        logout(request)
+        messages.success(request, "Tizimdan chiqdingiz.")
+    return redirect("menu_home")

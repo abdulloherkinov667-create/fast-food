@@ -1,7 +1,8 @@
 from django.contrib import admin
-from users.models import User
+from users.models import Users
 
-@admin.register(User)
-class UserAdmin(admin.ModelAdmin):
-    list_display = ('full_name', 'phone_number', 'created_at', 'updated_at')
-    search_fields = ('full_name', 'phone_number') 
+
+@admin.register(Users)
+class UsersAdmin(admin.ModelAdmin):
+    list_display = ('username', 'phone_number', 'date_joined')
+    search_fields = ('username', 'phone_number')

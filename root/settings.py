@@ -24,6 +24,7 @@ SECRET_KEY = 'django-insecure-tnix&%b64yy7_-8wme6i0k5uajqq$10#u-()f9vq9jb_j!1erm
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+AUTH_USER_MODEL = 'users.Users'  
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 ALLOWED_HOSTS = []
 

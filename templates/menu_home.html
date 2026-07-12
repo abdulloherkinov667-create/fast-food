@@ -527,16 +527,16 @@
               <div class="card-price">
                 {{ product.price|floatformat:0 }} <span>so'm</span>
               </div>
-              <a href="{% url 'savat_page' %}" class="add-btn" id="btn-{{ product.id }}"
+              <button type="button" class="add-btn" id="btn-{{ product.id }}"
                  onclick="quickAdd(event, this, '{{ product.id }}', '{{ product.name }}')">
                 + Qo'shish
-              </a>
+              </button>
             </div>
           </div>
         </div>
       {% empty %}
         <p style="text-align:center; grid-column: 1/-1; color: var(--muted); padding: 40px;">
-          Hozircha mahsulotlar mevjud emas.
+          Hozircha mahsulotlar mavjud emas.
         </p>
       {% endfor %}
     </div>
@@ -610,14 +610,15 @@
     <script>
       let cart = {};
       let currentActiveProductName = null;
+      let currentActiveProductId = null; // API uchun qo'shildi
 
-      // SIZ SO'RAGAN QISM: Django'dan kelgan "Ro'yxatdan o'tdingiz" xabarini Toast qilib chiqarish
+      // Sahifa yuklanganda mavjud savatni API dan olib JavaScript `cart` obyektiga yuklaymiz
       window.addEventListener('DOMContentLoaded', () => {
+        // Django Xabarlarini chiqarish
         const msgContainer = document.getElementById('django-messages');
         if (msgContainer) {
           const msgItem = msgContainer.querySelector('.django-msg-item');
           if (msgItem && msgItem.textContent.trim() !== '') {
-            // Profil ochilayotgandek chiroyli oltin rangli toast chiqaradi
             const t = document.getElementById('toast');
             t.innerHTML = `🎉 ${msgItem.textContent}`;
             t.classList.add('show', 'profile-toast');
@@ -625,6 +626,19 @@
             t._tid = setTimeout(() => t.classList.remove('show', 'profile-toast'), 3000);
           }
         }
+
+        // BACKEND API BILAN BOG'LANISH: Savat holatini yuklash
+        fetch()
+          .then(res => res.json())
+          .then(data => {
+            if (data.items) {
+              data.items.forEach(item => {
+                cart[item.product.name] = item.quantity;
+              });
+              updateBadge();
+              updateCardButtons();
+            }
+          }).catch(err => console.error("Savatni yuklashda xato:", err));
       });
 
       function formatPrice(val) {
@@ -639,6 +653,7 @@
       }
 
       function openSheet(cardEl) {
+        const id          = cardEl.dataset.id;
         const name        = cardEl.dataset.name;
         const catName     = cardEl.dataset.catName;
         const ingredients = cardEl.dataset.ingredients;
@@ -646,6 +661,7 @@
         const imgSrc      = cardEl.dataset.img;
 
         currentActiveProductName = name;
+        currentActiveProductId = id; // API so'rovi uchun id saqlab qolinadi
 
         const imgEl = document.getElementById('sheetImg');
         const placeholder = document.getElementById('sheetImgPlaceholder');
@@ -709,6 +725,10 @@
 
       function addFromSheet(btnEl) {
         animateFlyToCart(btnEl);
+        
+        // BACKEND API BILAN BOG'LANISH: Mahsulotni savatga qo'shish
+        sendAddToCartAPI(currentActiveProductId, 1);
+
         cart[currentActiveProductName] = 1;
         updateBadge();
         renderModalButtons();
@@ -718,10 +738,17 @@
 
       function changeQty(amount) {
         if (!currentActiveProductName) return;
-        cart[currentActiveProductName] = (cart[currentActiveProductName] || 0) + amount;
+        
+        let newQty = (cart[currentActiveProductName] || 0) + amount;
+        
+        // BACKEND API BILAN BOG'LANISH: Savat miqdorini yangilash
+        sendAddToCartAPI(currentActiveProductId, amount);
+
+        cart[currentActiveProductName] = newQty;
         if (cart[currentActiveProductName] <= 0) {
           delete cart[currentActiveProductName];
         }
+        
         updateBadge();
         renderModalButtons();
         updateCardButtons();
@@ -735,10 +762,71 @@
         e.stopPropagation();
         
         animateFlyToCart(btnEl);
-        cart[name] = 1;
-        updateBadge();
-        showToast('✓ Savatga qo\'shildi');
-        updateCardButtons();
+
+        // BACKEND API BILAN BOG'LANISH: Kartochkadan tezkor qo'shish
+        sendAddToCartAPI(id, 1, name);
+      }
+
+      // Django API ga ma'lumot jo'natuvchi yordamchi funksiya
+      const cartAddUrl = "{% url 'shoping_cart_create' %}";
+
+      function getCSRFToken() {
+        const name = 'csrftoken';
+        const cookies = document.cookie ? document.cookie.split(';') : [];
+        for (let i = 0; i < cookies.length; i += 1) {
+          const cookie = cookies[i].trim();
+          if (cookie.startsWith(name + '=')) {
+            return decodeURIComponent(cookie.substring(name.length + 1));
+          }
+        }
+        return '';
+      }
+
+      function sendAddToCartAPI(productId, qty, productName) {
+        const formData = new FormData();
+        formData.append('uzumproduct', productId);
+        formData.append('quantity', qty);
+
+        fetch(cartAddUrl, {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': getCSRFToken(),
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          body: formData,
+          credentials: 'same-origin'
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // Add to cart only if API was successful
+            cart[productName] = 1;
+            updateBadge();
+            showToast('✓ Savatga qo\'shildi');
+            updateCardButtons();
+          } else {
+            // Handle error
+            showErrorToast(data.error || 'Xatolik yuz berdi!');
+            if (data.redirect) {
+              setTimeout(() => {
+                window.location.href = data.redirect;
+              }, 2000);
+            }
+          }
+        })
+        .catch(err => {
+          console.error("API Xatolik:", err);
+          showErrorToast('Savatga qo\'shishda xatolik yuz berdi!');
+        });
+      }
+
+      function showErrorToast(message) {
+        const t = document.getElementById('toast');
+        t.innerHTML = `⚠️ ${message}`;
+        t.classList.add('show', 'error-toast');
+        t.classList.remove('profile-toast');
+        clearTimeout(t._tid);
+        t._tid = setTimeout(() => t.classList.remove('show', 'error-toast'), 4000);
       }
 
       function animateFlyToCart(startElement) {

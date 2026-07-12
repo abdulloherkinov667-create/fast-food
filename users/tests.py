@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.urls import reverse
+from django.urls import NoReverseMatch, reverse
 
 from .models import User
 
@@ -18,14 +18,6 @@ class ProfileSessionTests(TestCase):
         self.assertContains(response, first_user.full_name)
         self.assertNotContains(response, second_user.full_name)
 
-    def test_registration_stores_current_user_in_session(self):
-        response = self.client.post(
-            reverse("api_register"),
-            {"full_name": "Sardor", "phone_number": "998903333333"},
-            follow=True,
-        )
-
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(self.client.session.get("profile_user_id"))
-        saved_user = User.objects.get(phone_number="998903333333")
-        self.assertEqual(self.client.session["profile_user_id"], saved_user.id)
+    def test_registration_route_is_removed(self):
+        with self.assertRaises(NoReverseMatch):
+            reverse("register_user")

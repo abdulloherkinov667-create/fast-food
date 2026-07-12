@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="uz">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <title>Gusto & Co. — Ro'yxatdan o'tish</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+      :root {
+        --green: #1a2e1a;
+        --green-mid: #2d4a2d;
+        --gold: #b8962e;
+        --cream: #f5f3ec;
+        --white: #ffffff;
+        --text: #1a1a1a;
+        --muted: #8e8e80;
+        --border: #e0ddd4;
+      }
+      body {
+        font-family: "Montserrat", sans-serif;
+        background: var(--cream);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 20px;
+      }
+      .auth-container {
+        background: var(--white);
+        border-radius: 24px;
+        padding: 40px;
+        width: 100%;
+        max-width: 420px;
+        border: 1px solid var(--border);
+        box-shadow: 0 20px 35px rgba(26, 46, 26, 0.04);
+      }
+      .logo {
+        font-family: "Playfair Display", serif;
+        font-size: 32px;
+        font-weight: 700;
+        color: var(--green);
+        text-decoration: none;
+        text-align: center;
+        display: block;
+        margin-bottom: 10px;
+      }
+      .logo em { font-style: italic; }
+      .title {
+        font-size: 13px;
+        letter-spacing: 3px;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .form-group { margin-bottom: 20px; }
+      .form-group label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--muted);
+        margin-bottom: 8px;
+      }
+      .form-group input {
+        width: 100%;
+        padding: 14px 18px;
+        border-radius: 12px;
+        border: 1.5px solid var(--border);
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        transition: all 0.25s ease;
+      }
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--gold);
+        background: #fff;
+      }
+      .submit-btn {
+        width: 100%;
+        background: var(--green);
+        color: #fff;
+        border: none;
+        border-radius: 14px;
+        padding: 16px;
+        font-family: "Montserrat", sans-serif;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.25s ease;
+        margin-top: 10px;
+        box-shadow: 0 4px 12px rgba(26, 46, 26, 0.15);
+      }
+      .submit-btn:hover { background: var(--green-mid); transform: translateY(-1px); }
+      .switch-auth {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+      .switch-auth a { color: var(--gold); font-weight: 600; text-decoration: none; }
+      
+      /* Toast */
+      .toast {
+        position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(90px);
+        background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
+        color: #fff; border-radius: 999px; padding: 13px 24px; font-size: 12px; font-weight: 700;
+        z-index: 900; opacity: 0; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15);
+      }
+      .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+      .toast.error { background: #b32d2d; }
+    </style>
+  </head>
+  <body>
+
+    <div class="auth-container">
+      <a href="#" class="logo">Gusto <em>&</em> Co.</a>
+      <div class="title">Ro'yxatdan o'tish</div>
+
+      <form id="registerForm" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="username">Foydalanuvchi nomi</label>
+          <input type="text" id="username" name="username" required autocomplete="username">
+        </div>
+        <div class="form-group">
+          <label for="phone_number">Telefon raqami</label>
+          <input type="text" id="phone_number" name="phone_number" placeholder="+998901234567" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Parol</label>
+          <input type="password" id="password" name="password" required autocomplete="new-password">
+        </div>
+        <button type="submit" class="submit-btn">Hisob yaratish</button>
+      </form>
+
+      <div class="switch-auth">
+        A'zomisiz? <a href="/login/">Tizimga kirish</a>
+      </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      const registerApiUrl = "/api/v1/auth/register/"; 
+
+      function showToast(msg, isError = false) {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        if(isError) t.classList.add('error'); else t.classList.remove('error');
+        t.classList.add('show');
+        setTimeout(() => t.classList.remove('show'), 3000);
+      }
+
+      document.getElementById('registerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const username = document.getElementById('username').value;
+        const phone_number = document.getElementById('phone_number').value;
+        const password = document.getElementById('password').value;
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+        fetch(registerApiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrfToken
+          },
+          body: JSON.stringify({
+            username: username,
+            phone_number: phone_number,
+            password: password
+          })
+        })
+        .then(res => {
+          if (res.status === 201) {
+            return res.json().then(data => {
+              showToast(data.message || "✓ Muvaffaqiyatli! Login sahifasiga o'tilmoqda...");
+              setTimeout(() => { window.location.href = "/login/"; }, 2000);
+            });
+          } else {
+            return res.json().then(errors => {
+              let errorMsg = "Xatolik yuz berdi!";
+              if(errors.username) errorMsg = "Bu foydalanuvchi nomi band!";
+              if(errors.phone_number) errorMsg = "Bu telefon raqami allaqachon ro'yxatdan o'tgan!";
+              if(errors.password) errorMsg = "Parol kamida 6 ta belgidan iborat bo'lishi kerak!";
+              showToast(errorMsg, true);
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          showToast("Server bilan bog'lanishda xato!", true);
+        });
+      });
+    </script>
+  </body>
+</html>

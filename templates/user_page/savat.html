@@ -22,11 +22,11 @@ body{
   background:var(--cream);
   color:var(--text);
   min-height:100vh;
-  padding-bottom:180px; /* Checkout bloki sig'ishi uchun */
+  padding-bottom:180px;
   overflow-x:hidden;
 }
 
-/* ── JONLI ANIMATSIYALAR ── */
+/* ── ANIMATSIYALAR ── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(25px); }
   to { opacity: 1; transform: translateY(0); }
@@ -125,7 +125,7 @@ body{
 .order-submit-btn:hover { background: var(--green-mid); transform: translateY(-1px); }
 .order-submit-btn:active { transform: translateY(0); }
 
-/* ── UZUM STYLE PASTKI NAVBAR (URL'LAR TUZATILDI) ── */
+/* PASTKI NAVBAR */
 .bottom-nav {
   position: fixed; bottom: 0; left: 0; right: 0; height: 64px;
   background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
@@ -165,7 +165,7 @@ body{
 <body>
 
 <div class="top-header">
-  <a href="#" class="logo">Gusto <em>&</em> Co.</a>
+  <a href="{% url 'menu_home' %}" class="logo">Gusto <em>&</em> Co.</a>
 </div>
 
 <div class="page-header">
@@ -194,7 +194,7 @@ body{
 </div>
 
 <div class="bottom-nav">
-  <a href="{% url 'menu_home' %}" class="bottom-nav-item" onclick="navClick(this, 'menu')">
+  <a href="{% url 'menu_home' %}" class="bottom-nav-item" onclick="navClick(event, this, 'menu')">
     <svg viewBox="0 0 24 24">
       <rect x="3" y="3" width="7" height="7"></rect>
       <rect x="14" y="3" width="7" height="7"></rect>
@@ -204,7 +204,7 @@ body{
     <span>Menyu</span>
   </a>
 
-  <a href="{% url 'savat_page' %}" class="bottom-nav-item active" onclick="navClick(this, 'cart')">
+  <a href="{% url 'savat_page' %}" class="bottom-nav-item active">
     <svg viewBox="0 0 24 24">
       <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
       <line x1="3" y1="6" x2="21" y2="6" />
@@ -214,7 +214,7 @@ body{
     <span class="nav-badge show" id="cartBadge">0</span>
   </a>
 
-  <a href="{% url 'profile_user' %}" class="bottom-nav-item" onclick="navClick(this, 'profile')">
+  <a href="{% url 'profile_user' %}" class="bottom-nav-item" onclick="navClick(event, this, 'profile')">
     <svg viewBox="0 0 24 24">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
       <circle cx="12" cy="7" r="4"></circle>
@@ -226,7 +226,6 @@ body{
 <div class="toast" id="toast"></div>
 
 <script>
-// Namuna sifatida savat ichidagi dastlabki taomlar ma'lumotlari
 let cartData = [
   { id: 1, name: "Zaytunli Premium Bifsteks", price: 85000, qty: 1, img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=160&q=80" },
   { id: 2, name: "Ramen Premium Ugra", price: 45000, qty: 2, img: "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=160&q=80" }
@@ -236,17 +235,17 @@ function formatPrice(num) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
+// Sahifa yuklanganda ro'yxatni bir marta to'liq render qilamiz
 function renderCart() {
   const list = document.getElementById("cartList");
   const empty = document.getElementById("emptyCart");
   const panel = document.getElementById("checkoutPanel");
-  const badge = document.getElementById("cartBadge");
 
   if (cartData.length === 0) {
     list.innerHTML = "";
     empty.style.display = "block";
     panel.style.display = "none";
-    badge.style.display = "none";
+    document.getElementById("cartBadge").style.display = "none";
     document.body.style.paddingBottom = "90px";
     return;
   }
@@ -256,13 +255,7 @@ function renderCart() {
   list.innerHTML = "";
   document.body.style.paddingBottom = "180px";
 
-  let totalSum = 0;
-  let totalItems = 0;
-
   cartData.forEach((item) => {
-    totalSum += item.price * item.qty;
-    totalItems += item.qty;
-
     const div = document.createElement("div");
     div.className = "cart-item";
     div.id = `item_${item.id}`;
@@ -272,7 +265,7 @@ function renderCart() {
       </div>
       <div class="item-details">
         <div class="item-name">${item.name}</div>
-        <div class="item-price">${formatPrice(item.price * item.qty)} <span>so'm</span></div>
+        <div class="item-price" id="price_${item.id}">${formatPrice(item.price * item.qty)} <span>so'm</span></div>
       </div>
       <div class="qty-control">
         <button class="qty-btn" onclick="updateQty(${item.id}, -1)">−</button>
@@ -286,9 +279,28 @@ function renderCart() {
     list.appendChild(div);
   });
 
+  updateTotalsOnly();
+}
+
+// Butun sahifani miltillatmasdan, faqat hisob-kitob va raqamlarni yangilovchi funksiya
+function updateTotalsOnly() {
+  let totalSum = 0;
+  let totalItems = 0;
+
+  cartData.forEach(item => {
+    totalSum += item.price * item.qty;
+    totalItems += item.qty;
+  });
+
+  const badge = document.getElementById("cartBadge");
+  if (totalItems > 0) {
+    badge.textContent = totalItems;
+    badge.style.display = "flex";
+  } else {
+    badge.style.display = "none";
+  }
+
   document.getElementById("grandTotal").innerHTML = `${formatPrice(totalSum)} <span>so'm</span>`;
-  badge.textContent = totalItems;
-  badge.style.display = "flex";
 }
 
 function updateQty(id, change) {
@@ -303,15 +315,22 @@ function updateQty(id, change) {
 
   item.qty = newVal;
   
+  // Elementning ichki qiymatlarini DOM-ni buzmasdan yangilaymiz
   const valEl = document.getElementById(`val_${id}`);
+  const priceEl = document.getElementById(`price_${id}`);
+  
   if(valEl) {
     valEl.textContent = item.qty;
     valEl.classList.remove("bump");
-    void valEl.offsetWidth; 
+    void valEl.offsetWidth; // Animatsiyani qayta ishga tushirish
     valEl.classList.add("bump");
   }
+
+  if(priceEl) {
+    priceEl.innerHTML = `${formatPrice(item.price * item.qty)} <span>so'm</span>`;
+  }
   
-  setTimeout(renderCart, 100);
+  updateTotalsOnly();
 }
 
 function removeItem(id) {
@@ -334,13 +353,20 @@ function showToast(msg) {
   t._tid = setTimeout(() => t.classList.remove('show'), 2200);
 }
 
-function navClick(element, target) {
+function navClick(event, element, target) {
+  event.preventDefault();
   document.querySelectorAll('.bottom-nav-item').forEach(x => x.classList.remove('active'));
   element.classList.add('active');
-  if (target === 'menu') showToast('Menyu yuklanmoqda...');
-  if (target === 'profile') showToast('Profil ochilmoqda...');
+  
+  const toastMsg = target === 'menu' ? '👤 Menyu yuklanmoqda...' : '👤 Profil ochilmoqda...';
+  showToast(toastMsg);
+  
+  setTimeout(() => {
+    window.location.href = element.href;
+  }, 800);
 }
 
+// Dastlabki yuklash
 renderCart();
 </script>
 </body>
