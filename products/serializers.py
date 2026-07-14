@@ -52,3 +52,15 @@ class LoginSerializer(serializers.Serializer):
 
         data["user"] = user
         return data
+
+
+# 3. Savat (Shopping Cart) Serializeri
+class ShoppingCartSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+    product_id = serializers.IntegerField(write_only=True)
+    
+    class Meta:
+        from .models import ShopingModel
+        model = ShopingModel
+        fields = ['id', 'product', 'product_id', 'user', 'created_at']
+        read_only_fields = ['id', 'user', 'created_at']

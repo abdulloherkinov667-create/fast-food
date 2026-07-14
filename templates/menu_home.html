@@ -768,7 +768,7 @@
       }
 
       // Django API ga ma'lumot jo'natuvchi yordamchi funksiya
-      const cartAddUrl = "{% url 'shoping_cart_create' %}";
+      const cartAddUrl = "/api/v1/cart/add/";
 
       function getCSRFToken() {
         const name = 'csrftoken';
@@ -783,20 +783,41 @@
       }
 
       function sendAddToCartAPI(productId, qty, productName) {
-        const formData = new FormData();
-        formData.append('uzumproduct', productId);
-        formData.append('quantity', qty);
+        const payload = {
+          product_id: productId,
+          quantity: qty
+        };
 
         fetch(cartAddUrl, {
           method: 'POST',
           headers: {
             'X-CSRFToken': getCSRFToken(),
-            'X-Requested-With': 'XMLHttpRequest'
+            'X-Requested-With': 'XMLHttpRequest',
+            'Content-Type': 'application/json'
           },
-          body: formData,
+          body: JSON.stringify(payload),
           credentials: 'same-origin'
         })
-        .then(res => res.json())
+        .then(res => {
+          // Birinchi status kodni tekshirish
+          if (!res.ok) {
+            // Xatolik javobini JSON qilishga harakat qil
+            return res.json().then(data => {
+              return Promise.reject({
+                status: res.status,
+                ...data
+              });
+            }).catch(err => {
+              // JSON parse xatolik bo'lsa, status bilan reject qil
+              return Promise.reject({
+                status: res.status,
+                success: false,
+                error: 'Server xatolik: ' + res.statusText
+              });
+            });
+          }
+          return res.json();
+        })
         .then(data => {
           if (data.success) {
             // Add to cart only if API was successful
@@ -816,7 +837,17 @@
         })
         .catch(err => {
           console.error("API Xatolik:", err);
-          showErrorToast('Savatga qo\'shishda xatolik yuz berdi!');
+          // Agar 401 yoki boshqa xatolik bo'lsa
+          if (err.error) {
+            showErrorToast(err.error);
+            if (err.redirect) {
+              setTimeout(() => {
+                window.location.href = err.redirect;
+              }, 2000);
+            }
+          } else {
+            showErrorToast('Savatga qo\'shishda xatolik yuz berdi!');
+          }
         });
       }
 

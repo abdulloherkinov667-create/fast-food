@@ -3,7 +3,7 @@ from root import settings
 from django.urls import path
 from django.conf.urls.static import static 
 
-from products.views import menu_home
+from products.views import menu_home, ShoppingCartCreateAPIView
 from users.views import profile_page, savat_page, registratsiya_page, login_page, logout_user
 from products.views import shoping_cart_create
 from users.views import RegisterView, LoginView
@@ -22,4 +22,7 @@ urlpatterns = [
     # api auth    
     path('api/v1/auth/register/', RegisterView.as_view(), name='api_register'),
     path('api/v1/auth/login/', LoginView.as_view(), name='api_login'),
+    
+    # API - Savat
+    path('api/v1/cart/add/', ShoppingCartCreateAPIView.as_view(), name='api_cart_add'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
