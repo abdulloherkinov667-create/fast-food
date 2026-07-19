@@ -119,6 +119,38 @@ body{
   margin-top: 2px;
 }
 
+/* NATIJADA CHIQADIGAN MANZIL BLOKI */
+.address-result-box{
+  background:rgba(184,150,46,0.08);
+  border:1px solid rgba(184,150,46,0.3);
+  border-radius:12px;
+  padding:12px;
+  margin-top:4px;
+}
+.address-result-map{
+  width:100%;
+  height:130px;
+  border-radius:8px;
+  overflow:hidden;
+  margin-bottom:10px;
+  background:#e8e5dc;
+}
+.address-result-map img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+.address-result-text-row{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+}
+.address-result-text-row svg{
+  width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:2;flex-shrink:0;margin-top:2px;
+}
+.address-result-text{
+  font-size:13px;line-height:1.5;color:var(--text);
+}
+.address-result-text b{color:var(--green);font-weight:700;}
+
 /* TO'LOV USULI TANLASH — RADIO HACK */
 .pay-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2px;}
 .pay-input{position:absolute;opacity:0;pointer-events:none;}
@@ -239,7 +271,19 @@ body{
           </button>
           <input type="hidden" id="address" name="address" required>
           <div id="location-status" class="location-status">Lokatsiya hali tanlanmagan</div>
-          <div id="detected-address-display" style="font-size: 12px; font-weight: 600; color: var(--gold); margin-top: 4px; word-break: break-all;"></div>
+
+          <!-- Statik namuna: dinamik logikani o'zingiz ulaysiz -->
+          <div id="detected-address-display" class="address-result-box" style="display:none;">
+            <div class="address-result-map">
+              <img id="detected-address-map-img" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=500&q=80" alt="Manzil xaritada">
+            </div>
+            <div class="address-result-text-row">
+              <svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+              <div class="address-result-text">
+                Buyurtma qilmoqchi bo'lgan manzilingiz: <b id="detected-address-value">Ташкент, 1-й проезд Заркент, 2</b>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -340,6 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusText = document.getElementById('location-status');
   const btnText = document.getElementById('btn-text');
   const addressDisplay = document.getElementById('detected-address-display');
+  const addressValueEl = document.getElementById('detected-address-value');
 
   if (geoBtn) {
     geoBtn.addEventListener('click', () => {
@@ -352,31 +397,36 @@ document.addEventListener('DOMContentLoaded', () => {
       btnText.textContent = "Aniqlanmoqda...";
       statusText.textContent = "GPS signali tekshirilmoqda...";
       statusText.style.color = "var(--muted)";
-      addressDisplay.textContent = "";
+      addressDisplay.style.display = "none";
 
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
-          
-          // Kuryer bosganda to'g'ri ochilishi uchun xarita havolasi formatlandi
-          const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
-          addressInput.value = mapLink;
+
+          // Kuryer va backend uchun koordinata shu yerda saqlanadi (foydalanuvchiga ko'rinmaydi)
+          addressInput.value = `${lat},${lon}`;
+
+          // TODO (o'zingiz ulaysiz): lat/lon ni reverse-geocoding orqali
+          // haqiqiy manzilga (ko'cha, uy) aylantirib, addressValueEl.textContent ga yozing.
+          // Xarita rasmini xam kerak bo'lsa shu yerda static map API (masalan Google Static Maps)
+          // orqali dinamik qilib #detected-address-map-img ning src ini yangilaysiz.
+          // Hozircha ikkalasi ham statik (o'zgarmas) namuna sifatida ko'rsatilmoqda:
+          addressValueEl.textContent = "Ташкент, 1-й проезд Заркент, 2";
 
           btnText.textContent = "Manzil aniqlandi!";
-          statusText.textContent = "✅ Koordinatalar muvaffaqiyatli saqlandi:";
+          statusText.textContent = "✅ Manzil muvaffaqiyatli aniqlandi";
           statusText.style.color = "var(--green)";
-          
-          // Pastida havola shaklida yozib qo'yadigan qism
-          addressDisplay.textContent = `📍 Tanlangan manzil: ${mapLink}`;
-          
+
+          addressDisplay.style.display = "flex";
+
           geoBtn.style.borderStyle = "solid";
           geoBtn.style.background = "rgba(26, 46, 26, 0.05)";
         },
         (error) => {
           btnText.textContent = "Qayta urinish";
           statusText.style.color = "var(--red)";
-          addressDisplay.textContent = "";
+          addressDisplay.style.display = "none";
           switch(error.code) {
             case error.PERMISSION_DENIED:
               statusText.textContent = "⚠️ Lokatsiyaga ruxsat berilmadi.";
