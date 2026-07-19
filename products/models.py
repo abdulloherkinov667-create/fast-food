@@ -28,9 +28,10 @@ class FastFoodProduct(BaseCreateModel):
 class ShopingModel(BaseCreateModel):
     product = models.ForeignKey(FastFoodProduct, on_delete=models.CASCADE, related_name='cart_list')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='my_carts')
+    quantity = models.PositiveIntegerField(default=1) # <- Buni qo'shish kerak!
     
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username} - {self.product.name} ({self.quantity})"
     
     
 #order model
@@ -46,10 +47,7 @@ class Order(BaseCreateModel):
     
     class PaymentMethodChoice(models.TextChoices):
         CASH = 'cash', 'Naqd pul'
-        CARD = 'card', 'Plastik karta (Terminal)'
-        CLICK = 'click', 'Click'
         PAYME = 'payme', 'Payme'
-        UZUM = 'uzum', 'Uzum Bank'
         
     
     

@@ -55,12 +55,27 @@ class LoginSerializer(serializers.Serializer):
 
 
 # 3. Savat (Shopping Cart) Serializeri
+from rest_framework import serializers
+
+from .models import ShopingModel
+
+
 class ShoppingCartSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
-    product_id = serializers.IntegerField(write_only=True)
-    
+    product_name = serializers.CharField(source='product.name', read_only=True)
+    product_price = serializers.DecimalField(
+        source='product.price', max_digits=10, decimal_places=2, read_only=True
+    )
+    item_total_price = serializers.SerializerMethodField()
+
     class Meta:
-        from .models import ShopingModel
         model = ShopingModel
-        fields = ['id', 'product', 'product_id', 'user', 'created_at']
-        read_only_fields = ['id', 'user', 'created_at']
+        fields = [
+            'id',
+            'product',
+            'product_name',
+            'product_price',
+            'quantity',
+            'item_total_price',
+        ]
+    def get_item_total_price(self, obj):
+        return obj.product.price * obj.quantity

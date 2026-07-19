@@ -187,7 +187,7 @@
         font-family: "Playfair Display", serif; font-size: 18px; font-weight: 700; color: var(--gold);
       }
       .card-price span { font-family: "Montserrat", sans-serif; font-size: 11px; color: var(--muted); }
-      
+
       .add-btn {
         background: var(--green); color: #fff; border: none; border-radius: 30px;
         padding: 9px 18px; font-size: 11px; font-weight: 700; cursor: pointer;
@@ -201,15 +201,15 @@
         background: var(--green-mid);
         box-shadow: 0 4px 10px rgba(26, 46, 26, 0.15);
       }
-      .add-btn.in-cart { 
-        background: var(--gold); 
+      .add-btn.in-cart {
+        background: var(--gold);
         animation: popIn 0.3s ease;
       }
 
       /* ===== MODAL (BOTTOM SHEET) ===== */
       .sheet-overlay {
         position: fixed; inset: 0; z-index: 500;
-        background: rgba(0,0,0,0); pointer-events: none; 
+        background: rgba(0,0,0,0); pointer-events: none;
         transition: background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       }
       .sheet-overlay.open {
@@ -218,7 +218,7 @@
       .sheet {
         position: fixed; left: 0; right: 0; bottom: 0; z-index: 501;
         background: var(--white); border-radius: 24px 24px 0 0;
-        transform: translateY(100%); 
+        transform: translateY(100%);
         transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         display: flex; flex-direction: column; max-height: 90vh;
         box-shadow: 0 -10px 40px rgba(0,0,0,0.08);
@@ -351,8 +351,8 @@
         cursor: pointer; transition: all 0.25s ease; letter-spacing: 0.5px;
         box-shadow: 0 4px 12px rgba(26, 46, 26, 0.15);
       }
-      .sheet-add-btn:hover { 
-        background: var(--green-mid); 
+      .sheet-add-btn:hover {
+        background: var(--green-mid);
         transform: translateY(-1px);
         box-shadow: 0 6px 15px rgba(26, 46, 26, 0.2);
       }
@@ -400,14 +400,14 @@
         gap: 4px; flex: 1; height: 100%; position: relative;
         transition: color 0.2s ease;
       }
-      .bottom-nav-item svg { 
-        width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 2; 
+      .bottom-nav-item svg {
+        width: 23px; height: 23px; fill: none; stroke: currentColor; stroke-width: 2;
         transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
       .bottom-nav-item:active svg { transform: scale(0.85); }
       .bottom-nav-item.active { color: var(--text); font-weight: 600; }
       .bottom-nav-item.active svg { fill: currentColor; transform: scale(1.05); }
-      
+
       .nav-badge {
         position: absolute; top: 6px; right: calc(50% - 22px);
         background: var(--gold); color: #fff; min-width: 18px; height: 18px;
@@ -425,7 +425,7 @@
         background: linear-gradient(135deg, var(--green) 0%, var(--green-mid) 100%);
         color: #fff; border-radius: 999px;
         padding: 13px 24px; font-size: 12px; font-weight: 700;
-        z-index: 900; opacity: 0; 
+        z-index: 900; opacity: 0;
         transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.15), opacity 0.3s ease;
         white-space: nowrap;
         box-shadow: 0 10px 28px rgba(26, 46, 26, 0.2);
@@ -433,10 +433,6 @@
         letter-spacing: 0.3px;
       }
       .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-      .toast.profile-toast {
-        background: linear-gradient(135deg, var(--gold) 0%, #d2aa3b 100%);
-        box-shadow: 0 12px 30px rgba(184, 150, 46, 0.25);
-      }
 
       /* FLYING PARTICLE EFFECT ELEMENT */
       .fly-particle {
@@ -476,6 +472,9 @@
   </head>
   <body>
 
+    <!-- CSRF cookie sahifa yuklanganda o'rnatilishi uchun (JS fetch so'rovlari uchun kerak) -->
+    <div style="display:none">{% csrf_token %}</div>
+
     {% if messages %}
       <div id="django-messages" style="display: none;">
         {% for message in messages %}
@@ -483,6 +482,9 @@
         {% endfor %}
       </div>
     {% endif %}
+
+    <!-- Foydalanuvchining hozirgi savatidagi mahsulotlar: {"<product_id>": <quantity>, ...} -->
+    {{ cart_quantities|json_script:"cart-quantities-data" }}
 
     <div class="top-header">
       <a href="{% url 'menu_home' %}" class="logo">Gusto <em>&</em> Co.</a>
@@ -536,12 +538,11 @@
         </div>
       {% empty %}
         <p style="text-align:center; grid-column: 1/-1; color: var(--muted); padding: 40px;">
-          Hozircha mahsulotlar mavjud emas.
+          Hozircha mahsulotlar mujvud emas.
         </p>
       {% endfor %}
     </div>
 
-    
     <div class="bottom-nav" id="bottomNav">
       <a href="{% url 'menu_home' %}" class="bottom-nav-item active">
         <svg viewBox="0 0 24 24">
@@ -561,7 +562,7 @@
         <span>Savat</span>
         <span class="nav-badge" id="cartBadge">0</span>
       </a>
-      <a href="{% url 'profile_user' %}" class="bottom-nav-item" onclick="showProfileToast(event, this)">
+      <a href="{% url 'profile_user' %}" class="bottom-nav-item">
         <svg viewBox="0 0 24 24">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
           <circle cx="12" cy="7" r="4"></circle>
@@ -608,37 +609,49 @@
     <div class="toast" id="toast"></div>
 
     <script>
+      // cart obyekti ENDI product_name emas, product_id bilan kalitlanadi (ishonchliroq)
+      // shakli: { "<product_id>": <quantity> }
       let cart = {};
-      let currentActiveProductName = null;
-      let currentActiveProductId = null; // API uchun qo'shildi
+      let currentActiveProductId = null;
 
-      // Sahifa yuklanganda mavjud savatni API dan olib JavaScript `cart` obyektiga yuklaymiz
+      const cartAddUrl = "/api/v1/cart/add/";
+
+      function getCSRFToken() {
+        const name = 'csrftoken';
+        const cookies = document.cookie ? document.cookie.split(';') : [];
+        for (let i = 0; i < cookies.length; i += 1) {
+          const cookie = cookies[i].trim();
+          if (cookie.startsWith(name + '=')) {
+            return decodeURIComponent(cookie.substring(name.length + 1));
+          }
+        }
+        return '';
+      }
+
       window.addEventListener('DOMContentLoaded', () => {
-        // Django Xabarlarini chiqarish
         const msgContainer = document.getElementById('django-messages');
         if (msgContainer) {
           const msgItem = msgContainer.querySelector('.django-msg-item');
           if (msgItem && msgItem.textContent.trim() !== '') {
-            const t = document.getElementById('toast');
-            t.innerHTML = `🎉 ${msgItem.textContent}`;
-            t.classList.add('show', 'profile-toast');
-            clearTimeout(t._tid);
-            t._tid = setTimeout(() => t.classList.remove('show', 'profile-toast'), 3000);
+            showToast(`🎉 ${msgItem.textContent}`);
           }
         }
 
-        // BACKEND API BILAN BOG'LANISH: Savat holatini yuklash
-        fetch()
-          .then(res => res.json())
-          .then(data => {
-            if (data.items) {
-              data.items.forEach(item => {
-                cart[item.product.name] = item.quantity;
-              });
-              updateBadge();
-              updateCardButtons();
-            }
-          }).catch(err => console.error("Savatni yuklashda xato:", err));
+        // Server render qilib bergan savat holatini o'qiymiz (qo'shimcha fetch shart emas)
+        const cartDataEl = document.getElementById('cart-quantities-data');
+        if (cartDataEl) {
+          try {
+            const initialCart = JSON.parse(cartDataEl.textContent) || {};
+            Object.keys(initialCart).forEach(pid => {
+              cart[pid] = initialCart[pid];
+            });
+          } catch (e) {
+            console.error('Savat malumotini oqishda xatolik:', e);
+          }
+        }
+
+        updateBadge();
+        updateCardButtons();
       });
 
       function formatPrice(val) {
@@ -660,8 +673,7 @@
         const price       = cardEl.dataset.price;
         const imgSrc      = cardEl.dataset.img;
 
-        currentActiveProductName = name;
-        currentActiveProductId = id; // API so'rovi uchun id saqlab qolinadi
+        currentActiveProductId = id;
 
         const imgEl = document.getElementById('sheetImg');
         const placeholder = document.getElementById('sheetImgPlaceholder');
@@ -703,15 +715,22 @@
         document.body.style.overflow = 'hidden';
       }
 
+      function closeSheet() {
+        document.getElementById('sheetOverlay').classList.remove('open');
+        document.getElementById('sheet').classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
       function renderModalButtons() {
         const container = document.getElementById('actionContainer');
-        if (cart[currentActiveProductName]) {
+        const qty = cart[currentActiveProductId];
+        if (qty) {
           container.innerHTML = `
             <div class="cart-managed-row">
               <a href="{% url 'savat_page' %}" class="sheet-added-status-btn">Savatga o'tish</a>
               <div class="qty-selector">
                 <button class="qty-btn" onclick="changeQty(-1)">−</button>
-                <div class="qty-num">${cart[currentActiveProductName]}</div>
+                <div class="qty-num">${qty}</div>
                 <button class="qty-btn" onclick="changeQty(1)">+</button>
               </div>
             </div>
@@ -725,69 +744,53 @@
 
       function addFromSheet(btnEl) {
         animateFlyToCart(btnEl);
-        
-        // BACKEND API BILAN BOG'LANISH: Mahsulotni savatga qo'shish
-        sendAddToCartAPI(currentActiveProductId, 1);
 
-        cart[currentActiveProductName] = 1;
+        cart[currentActiveProductId] = (cart[currentActiveProductId] || 0) + 1;
         updateBadge();
         renderModalButtons();
-        showToast('✓ Savatga qo\'shildi');
         updateCardButtons();
+        showToast('✓ Savatga qo\'shildi');
+
+        syncCart(currentActiveProductId, 1);
       }
 
       function changeQty(amount) {
-        if (!currentActiveProductName) return;
-        
-        let newQty = (cart[currentActiveProductName] || 0) + amount;
-        
-        // BACKEND API BILAN BOG'LANISH: Savat miqdorini yangilash
-        sendAddToCartAPI(currentActiveProductId, amount);
+        if (!currentActiveProductId) return;
 
-        cart[currentActiveProductName] = newQty;
-        if (cart[currentActiveProductName] <= 0) {
-          delete cart[currentActiveProductName];
+        const newQty = (cart[currentActiveProductId] || 0) + amount;
+
+        if (newQty <= 0) {
+          delete cart[currentActiveProductId];
+          showToast('Mahsulot olib tashlandi');
+        } else {
+          cart[currentActiveProductId] = newQty;
         }
-        
+
         updateBadge();
         renderModalButtons();
         updateCardButtons();
+
+        syncCart(currentActiveProductId, amount);
       }
 
       function quickAdd(e, btnEl, id, name) {
-        if (cart[name]) {
-          return; 
-        }
+        if (cart[id]) return;
         e.preventDefault();
         e.stopPropagation();
-        
+
         animateFlyToCart(btnEl);
 
-        // BACKEND API BILAN BOG'LANISH: Kartochkadan tezkor qo'shish
-        sendAddToCartAPI(id, 1, name);
+        cart[id] = 1;
+        updateBadge();
+        updateCardButtons();
+        showToast('✓ Savatga qo\'shildi');
+
+        syncCart(id, 1);
       }
 
-      // Django API ga ma'lumot jo'natuvchi yordamchi funksiya
-      const cartAddUrl = "/api/v1/cart/add/";
-
-      function getCSRFToken() {
-        const name = 'csrftoken';
-        const cookies = document.cookie ? document.cookie.split(';') : [];
-        for (let i = 0; i < cookies.length; i += 1) {
-          const cookie = cookies[i].trim();
-          if (cookie.startsWith(name + '=')) {
-            return decodeURIComponent(cookie.substring(name.length + 1));
-          }
-        }
-        return '';
-      }
-
-      function sendAddToCartAPI(productId, qty, productName) {
-        const payload = {
-          product_id: productId,
-          quantity: qty
-        };
-
+      // Serverga delta (o'zgarish) yuboramiz va serverdan qaytgan aniq quantity bilan
+      // lokal cart holatini sinxronlaymiz (ikki tab ochiq bo'lsa ham noto'g'ri holatga tushmasligi uchun)
+      function syncCart(productId, delta) {
         fetch(cartAddUrl, {
           method: 'POST',
           headers: {
@@ -795,175 +798,110 @@
             'X-Requested-With': 'XMLHttpRequest',
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({ product_id: productId, quantity: delta }),
           credentials: 'same-origin'
         })
-        .then(res => {
-          // Birinchi status kodni tekshirish
-          if (!res.ok) {
-            // Xatolik javobini JSON qilishga harakat qil
-            return res.json().then(data => {
-              return Promise.reject({
-                status: res.status,
-                ...data
-              });
-            }).catch(err => {
-              // JSON parse xatolik bo'lsa, status bilan reject qil
-              return Promise.reject({
-                status: res.status,
-                success: false,
-                error: 'Server xatolik: ' + res.statusText
-              });
-            });
-          }
-          return res.json();
-        })
+        .then(res => res.json())
         .then(data => {
-          if (data.success) {
-            // Add to cart only if API was successful
-            cart[productName] = 1;
-            updateBadge();
-            showToast('✓ Savatga qo\'shildi');
-            updateCardButtons();
-          } else {
-            // Handle error
-            showErrorToast(data.error || 'Xatolik yuz berdi!');
+          if (!data.success) {
             if (data.redirect) {
-              setTimeout(() => {
-                window.location.href = data.redirect;
-              }, 2000);
+              window.location.href = data.redirect;
+              return;
             }
+            alert(data.error || "Xatolik yuz berdi");
+            return;
+          }
+
+          if (data.deleted || data.quantity <= 0) {
+            delete cart[productId];
+          } else {
+            cart[productId] = data.quantity;
+          }
+
+          updateBadge();
+          updateCardButtons();
+          if (currentActiveProductId === productId) {
+            renderModalButtons();
           }
         })
-        .catch(err => {
-          console.error("API Xatolik:", err);
-          // Agar 401 yoki boshqa xatolik bo'lsa
-          if (err.error) {
-            showErrorToast(err.error);
-            if (err.redirect) {
-              setTimeout(() => {
-                window.location.href = err.redirect;
-              }, 2000);
-            }
-          } else {
-            showErrorToast('Savatga qo\'shishda xatolik yuz berdi!');
-          }
-        });
+        .catch(err => console.error("API xatolik:", err));
       }
 
-      function showErrorToast(message) {
-        const t = document.getElementById('toast');
-        t.innerHTML = `⚠️ ${message}`;
-        t.classList.add('show', 'error-toast');
-        t.classList.remove('profile-toast');
-        clearTimeout(t._tid);
-        t._tid = setTimeout(() => t.classList.remove('show', 'error-toast'), 4000);
-      }
+      function updateBadge() {
+        const badge = document.getElementById('cartBadge');
+        let total = 0;
+        for (let key in cart) { total += cart[key]; }
 
-      function animateFlyToCart(startElement) {
-        const cartBtn = document.getElementById('cartNavBtn');
-        if (!cartBtn) return;
-
-        const startRect = startElement.getBoundingClientRect();
-        const endRect = cartBtn.getBoundingClientRect();
-
-        const particle = document.createElement('div');
-        particle.className = 'fly-particle';
-        document.body.appendChild(particle);
-
-        const startX = startRect.left + startRect.width / 2 - 10;
-        const startY = startRect.top + startRect.height / 2 - 10;
-        
-        const flyX = (endRect.left + endRect.width / 2) - (startX + 10);
-        const flyY = (endRect.top + endRect.height / 2) - (startY + 10);
-
-        particle.style.left = `${startX}px`;
-        particle.style.top = `${startY}px`;
-        particle.style.setProperty('--fly-x', `${flyX}px`);
-        particle.style.setProperty('--fly-y', `${flyY}px`);
-
-        particle.style.animation = 'flyEffect 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
-
-        setTimeout(() => {
-          particle.remove();
-          const badge = document.getElementById('cartBadge');
-          badge.classList.remove('pulse');
-          void badge.offsetWidth; 
-          badge.classList.add('pulse');
-        }, 600);
+        if (total > 0) {
+          badge.textContent = total;
+          badge.classList.add('show', 'pulse');
+          setTimeout(() => badge.classList.remove('pulse'), 300);
+        } else {
+          badge.classList.remove('show');
+        }
       }
 
       function updateCardButtons() {
         document.querySelectorAll('.card').forEach(card => {
-          const name = card.dataset.name;
-          const btn = card.querySelector('.add-btn');
-          if (cart[name]) {
-            btn.textContent = 'Savatga o\'tish';
-            btn.classList.add('in-cart');
-          } else {
-            btn.textContent = '+ Qo\'shish';
-            btn.classList.remove('in-cart');
+          const id = card.dataset.id;
+          const btn = document.getElementById(`btn-${id}`);
+          if (btn) {
+            if (cart[id]) {
+              btn.textContent = 'Savatda';
+              btn.classList.add('in-cart');
+            } else {
+              btn.textContent = '+ Qo\'shish';
+              btn.classList.remove('in-cart');
+            }
           }
         });
       }
 
-      function closeSheet() {
-        document.getElementById('sheetOverlay').classList.remove('open');
-        document.getElementById('sheet').classList.remove('open');
-        document.body.style.overflow = '';
-      }
-
-      function updateBadge() {
-        const total = Object.values(cart).reduce((a, b) => a + b, 0);
-        const badge = document.getElementById('cartBadge');
-        badge.textContent = total;
-        total > 0 ? badge.classList.add('show') : badge.classList.remove('show');
-      }
-
       function showToast(msg) {
         const t = document.getElementById('toast');
-        t.textContent = msg;
-        t.classList.remove('profile-toast');
+        t.innerHTML = msg;
         t.classList.add('show');
         clearTimeout(t._tid);
-        t._tid = setTimeout(() => t.classList.remove('show'), 2200);
+        t._tid = setTimeout(() => t.classList.remove('show'), 2500);
       }
 
-      function showProfileToast(event, linkEl) {
-        event.preventDefault();
-        const t = document.getElementById('toast');
-        t.innerHTML = '👤 Profil ochilmoqda...';
-        t.classList.add('show', 'profile-toast');
-        clearTimeout(t._tid);
-        t._tid = setTimeout(() => {
-          t.classList.remove('show', 'profile-toast');
-          window.location.href = linkEl.href;
-        }, 900);
+      function animateFlyToCart(startEl) {
+        const cartBtn = document.getElementById('cartNavBtn');
+        if (!cartBtn) return;
+
+        const startRect = startEl.getBoundingClientRect();
+        const endRect = cartBtn.getBoundingClientRect();
+
+        const particle = document.createElement('div');
+        particle.className = 'fly-particle';
+        particle.style.left = startRect.left + startRect.width / 2 + 'px';
+        particle.style.top = startRect.top + startRect.height / 2 + 'px';
+
+        const flyX = (endRect.left + endRect.width / 2) - (startRect.left + startRect.width / 2);
+        const flyY = (endRect.top + endRect.height / 2) - (startRect.top + startRect.height / 2);
+
+        particle.style.setProperty('--fly-x', flyX + 'px');
+        particle.style.setProperty('--fly-y', flyY + 'px');
+        particle.style.animation = 'flyEffect 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 600);
       }
 
       document.querySelectorAll('.filter-pill').forEach(pill => {
-        pill.addEventListener('click', function () {
-          document.querySelectorAll('.filter-pill').forEach(x => x.classList.remove('active'));
-          this.classList.add('active');
-          const filter = this.getAttribute('data-f');
-          
+        pill.addEventListener('click', () => {
+          document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+          pill.classList.add('active');
+          const f = pill.dataset.f;
           document.querySelectorAll('.card').forEach(card => {
-            if (filter === 'all' || card.getAttribute('data-cat') === filter) {
+            if (f === 'all' || card.dataset.cat === f) {
               card.style.display = 'block';
-              card.style.animation = 'popIn 0.4s ease forwards';
             } else {
               card.style.display = 'none';
             }
           });
         });
       });
-
-      let startY = 0;
-      const sh = document.getElementById('sheet');
-      sh.addEventListener('touchstart', e => (startY = e.touches[0].clientY), { passive: true });
-      sh.addEventListener('touchend', e => {
-        if (e.changedTouches[0].clientY - startY > 70) closeSheet();
-      }, { passive: true });
     </script>
   </body>
 </html>
