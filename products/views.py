@@ -61,3 +61,7 @@ def delete_product_cart(request, pk):
         db_cart.delete()
         return redirect('savat_page')
     return redirect('savat_page')
+
+
+def checkout_html(request):
+    return render(request, "user_page/checkout.html")

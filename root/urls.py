@@ -3,7 +3,7 @@ from root import settings
 from django.urls import path
 from django.conf.urls.static import static 
 
-from products.views import menu_home
+from products.views import menu_home, checkout_html
 from users.views import profile_page, savat_page, registratsiya_page, login_page, logout_user
 from products.views import delete_product_cart
 from users.views import RegisterView, LoginView
@@ -18,6 +18,8 @@ urlpatterns = [
     path('registratsiya/', registratsiya_page, name='registratsiya_page'),
     path('login/', login_page, name='login_page'),
     path('logout/', logout_user, name='logout_user'),
+    path('checkout_html/', checkout_html, name='checkout_html'),
+    
     
     # api auth    
     path('api/v1/auth/register/', RegisterView.as_view(), name='api_register'),

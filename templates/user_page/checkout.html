@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Gusto & Co. — Buyurtmani rasmiylashtirish</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#1a2e1a;
+  --green-mid:#2d4a2d;
+  --gold:#b8962e;
+  --cream:#f5f3ec;
+  --white:#ffffff;
+  --text:#1a1a1a;
+  --muted:#6b6b5a;
+  --border:#e0ddd4;
+  --red:#c0392b;
+}
+body{
+  font-family:"Montserrat",sans-serif;
+  background:var(--cream);
+  color:var(--text);
+  min-height:100vh;
+  padding-bottom:40px;
+  overflow-x:hidden;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* HEADER */
+.top-header{text-align:center;padding:24px 20px 10px;background:var(--cream);}
+.logo{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:var(--green);text-decoration:none;display:inline-block;}
+.logo em{font-style:italic}
+
+.page-header{text-align:center;padding:15px 20px 25px;animation:fadeUp 0.5s ease both;}
+.page-header p{font-size:13px;letter-spacing:4px;color:var(--muted);font-weight:500;text-transform:uppercase;}
+
+/* KONTEYNER */
+.checkout-container{max-width:600px;margin:0 auto;padding:0 20px;}
+
+/* BOSQICH INDIKATOR */
+.steps-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:26px;animation:fadeUp 0.5s 0.05s ease both;}
+.step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);}
+.step-dot.active{background:var(--gold);width:22px;border-radius:5px;}
+
+/* SECTION CARD */
+.form-section{
+  background:var(--white);border:1px solid var(--border);border-radius:20px;
+  padding:22px;margin-bottom:18px;box-shadow:0 5px 15px rgba(0,0,0,0.03);
+  animation:fadeUp 0.55s 0.1s ease both;
+}
+.section-title{
+  font-family:"Playfair Display",serif;font-size:18px;font-weight:700;color:var(--green);
+  margin-bottom:4px;display:flex;align-items:center;gap:10px;
+}
+.section-title .num{
+  width:24px;height:24px;border-radius:50%;background:var(--green);color:#fff;
+  font-family:"Montserrat",sans-serif;font-size:12px;font-weight:800;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.section-sub{font-size:12px;color:var(--muted);margin-bottom:18px;margin-left:34px;}
+
+/* FORM FIELDS */
+.field-group{margin-bottom:16px;}
+.field-group:last-child{margin-bottom:0;}
+.field-label{display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.field-input, .field-textarea{
+  width:100%;border:1.5px solid var(--border);border-radius:12px;padding:13px 15px;
+  font-family:"Montserrat",sans-serif;font-size:14px;color:var(--text);background:var(--cream);
+  transition:border-color 0.2s, background 0.2s; outline:none;
+}
+.field-input:focus, .field-textarea:focus{border-color:var(--gold);background:var(--white);}
+.field-textarea{resize:vertical;min-height:70px;font-family:inherit;}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* LOKATSIYA TUGMASI STILI */
+.geo-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.location-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  background: var(--cream);
+  border: 1.5px dashed var(--gold);
+  border-radius: 12px;
+  padding: 15px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--green);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.location-btn:hover {
+  background: rgba(184,150,46,0.08);
+  border-style: solid;
+}
+.location-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 2;
+}
+.location-status {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  margin-top: 2px;
+}
+
+/* TO'LOV USULI TANLASH — RADIO HACK */
+.pay-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2px;}
+.pay-input{position:absolute;opacity:0;pointer-events:none;}
+.pay-label{
+  display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;
+  border:1.5px solid var(--border);border-radius:14px;padding:16px 10px;cursor:pointer;
+  transition:all 0.2s ease; user-select:none;
+}
+.pay-label svg{width:22px;height:22px;stroke:var(--muted);fill:none;stroke-width:2;transition:stroke 0.2s;}
+.pay-label span{font-size:12px;font-weight:700;color:var(--muted);transition:color 0.2s;}
+
+#pay_cash:checked ~ .pay-tabs label[for="pay_cash"],
+#pay_card:checked ~ .pay-tabs label[for="pay_card"]{
+  border-color:var(--gold); background:rgba(184,150,46,0.08);
+}
+#pay_cash:checked ~ .pay-tabs label[for="pay_cash"] svg,
+#pay_card:checked ~ .pay-tabs label[for="pay_card"] svg{ stroke:var(--gold); }
+#pay_cash:checked ~ .pay-tabs label[for="pay_cash"] span,
+#pay_card:checked ~ .pay-tabs label[for="pay_card"] span{ color:var(--gold); }
+
+/* Karta va Naqd maydonlari dinamikasi */
+.card-fields{
+  max-height:0; opacity:0; overflow:hidden; margin-top:0;
+  transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease;
+}
+#pay_card:checked ~ .card-fields{
+  max-height:400px; opacity:1; margin-top:18px;
+  padding-top:18px; border-top:1px dashed var(--border);
+}
+
+.cash-note{
+  max-height:0; opacity:0; overflow:hidden;
+  transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease;
+}
+#pay_cash:checked ~ .cash-note{
+  max-height:120px; opacity:1; margin-top:16px; padding-top:16px; border-top:1px dashed var(--border);
+}
+.cash-note-inner{
+  display:flex; gap:10px; align-items:flex-start; font-size:12.5px; color:var(--muted); line-height:1.6;
+}
+.cash-note-inner svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:2;flex-shrink:0;margin-top:1px;}
+
+/* BUYURTMA TARKIBI */
+.summary-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
+.summary-item{display:flex;align-items:center;gap:12px;}
+.summary-item-img{width:48px;height:48px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#e8e5dc;}
+.summary-item-img img{width:100%;height:100%;object-fit:cover;display:block;}
+.summary-item-info{flex:1;min-width:0;}
+.summary-item-name{font-size:13.5px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.summary-item-qty{font-size:11.5px;color:var(--muted);}
+.summary-item-price{font-family:"Playfair Display",serif;font-size:14px;font-weight:700;color:var(--gold);white-space:nowrap;}
+.summary-item-price span{font-family:"Montserrat",sans-serif;font-size:10px;color:var(--muted);}
+
+.summary-divider{border-top:1px solid var(--border);margin:14px 0;}
+.summary-total-row{display:flex;justify-content:space-between;align-items:center;}
+.summary-total-label{font-size:13px;font-weight:600;color:var(--muted);}
+.summary-total-val{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--green);}
+.summary-total-val span{font-family:"Montserrat",sans-serif;font-size:12px;color:var(--muted);}
+
+/* SUBMIT */
+.submit-btn{
+  display:block;width:100%;background:var(--green);color:#fff;border:none;border-radius:30px;
+  padding:17px;font-family:"Montserrat",sans-serif;font-size:14px;font-weight:700;letter-spacing:0.8px;
+  cursor:pointer;transition:all 0.25s;box-shadow:0 6px 18px rgba(26,46,26,0.25);
+  margin-top:6px;
+}
+.submit-btn:hover{background:var(--green-mid);transform:translateY(-2px);}
+.submit-btn:active{transform:translateY(0);}
+
+.back-link{
+  display:block;text-align:center;margin-top:16px;font-size:12.5px;color:var(--muted);
+  text-decoration:none;font-weight:600;
+}
+.back-link:hover{color:var(--green);}
+
+@media (max-width:400px){
+  .field-row{grid-template-columns:1fr;}
+  .form-section{padding:18px 16px;}
+  .checkout-container{padding:0 14px;}
+}
+</style>
+</head>
+<body>
+
+<div class="top-header">
+  <a href="#" class="logo">Gusto <em>&</em> Co.</a>
+</div>
+
+<div class="page-header">
+  <p>Buyurtmani rasmiylashtirish</p>
+</div>
+
+<div class="checkout-container">
+
+  <div class="steps-row">
+    <div class="step-dot active"></div>
+    <div class="step-dot active"></div>
+    <div class="step-dot"></div>
+  </div>
+
+  <form method="post" action="">
+    
+    <div class="form-section">
+      <div class="section-title"><span class="num">1</span> Yetkazib berish</div>
+      <div class="section-sub">Buyurtma qayerga va kimga yetkazilishi kerak</div>
+
+      <div class="field-group">
+        <label class="field-label" for="phone">Telefon raqami</label>
+        <input class="field-input" type="tel" id="phone" name="phone" placeholder="+998 (90) 123-45-67" required>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Yetkazib berish manzili</label>
+        <div class="geo-btn-wrapper">
+          <button type="button" id="geo-locator-btn" class="location-btn">
+            <svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span id="btn-text">Lokatsiyani aniqlash</span>
+          </button>
+          <input type="hidden" id="address" name="address" required>
+          <div id="location-status" class="location-status">Lokatsiya hali tanlanmagan</div>
+          <div id="detected-address-display" style="font-size: 12px; font-weight: 600; color: var(--gold); margin-top: 4px; word-break: break-all;"></div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="description">Izoh (ixtiyoriy)</label>
+        <textarea class="field-textarea" id="description" name="description" placeholder="Masalan: domofon kodi, kuryerga eslatma..." style="min-height:50px"></textarea>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title"><span class="num">2</span> To'lov usuli</div>
+      <div class="section-sub">Qulay usulni tanlang</div>
+
+      <input class="pay-input" type="radio" id="pay_cash" name="payment_method" value="cash" checked>
+      <input class="pay-input" type="radio" id="pay_card" name="payment_method" value="payme">
+
+      <div class="pay-tabs">
+        <label class="pay-label" for="pay_cash">
+          <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"></rect><path d="M2 10h20"></path><circle cx="12" cy="15" r="1.5"></circle></svg>
+          <span>Naqd pul</span>
+        </label>
+        <label class="pay-label" for="pay_card">
+          <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+          <span>Karta (Payme)</span>
+        </label>
+      </div>
+
+      <div class="cash-note">
+        <div class="cash-note-inner">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          <span>To'lovni kuryerga naqd pul orqali amalga oshirasiz. Aniq summani tayyorlab qo'yishingizni maslahat beramiz.</span>
+        </div>
+      </div>
+
+      <div class="card-fields">
+        <div class="field-group">
+          <label class="field-label" for="card_holder_name">Karta egasining ismi</label>
+          <input class="field-input" type="text" id="card_holder_name" name="card_holder_name" placeholder="MASALAN: JASUR KARIMOV">
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="card_number">Karta raqami</label>
+          <input class="field-input" type="text" id="card_number" name="card_number" placeholder="8600 1234 5678 9012" inputmode="numeric" maxlength="19">
+        </div>
+
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label" for="card_expiry">Amal qilish muddati</label>
+            <input class="field-input" type="text" id="card_expiry" name="card_expiry" placeholder="OO/YY" inputmode="numeric" maxlength="5">
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="card_cvv">CVV</label>
+            <input class="field-input" type="password" id="card_cvv" name="card_cvv" placeholder="•••" inputmode="numeric" maxlength="3">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <div class="section-title"><span class="num">3</span> Buyurtma tarkibi</div>
+      <div class="section-sub">Savatingizdagi mahsulotlar</div>
+
+      <div class="summary-list">
+        <div class="summary-item">
+          <div class="summary-item-img">
+            <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=120&q=80" alt="Mahsulot">
+          </div>
+          <div class="summary-item-info">
+            <div class="summary-item-name">Premium Pizza Gusto</div>
+            <div class="summary-item-qty">2 dona</div>
+          </div>
+          <div class="summary-item-price">
+            150 000 <span>so'm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-divider"></div>
+
+      <div class="summary-total-row">
+        <span class="summary-total-label">Umumiy to'lov:</span>
+        <span class="summary-total-val">150 000 <span>so'm</span></span>
+      </div>
+    </div>
+
+    <button type="submit" class="submit-btn">Buyurtmani tasdiqlash</button>
+  </form>
+
+  <a href="#" class="back-link">← Savatga qaytish</a>
+
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // --- GPS GEOLOCATION TUGMASI ---
+  const geoBtn = document.getElementById('geo-locator-btn');
+  const addressInput = document.getElementById('address');
+  const statusText = document.getElementById('location-status');
+  const btnText = document.getElementById('btn-text');
+  const addressDisplay = document.getElementById('detected-address-display');
+
+  if (geoBtn) {
+    geoBtn.addEventListener('click', () => {
+      if (!navigator.geolocation) {
+        statusText.textContent = "⚠️ Brauzeringiz lokatsiyani qo'llab-quvvatlamaydi.";
+        statusText.style.color = "var(--red)";
+        return;
+      }
+
+      btnText.textContent = "Aniqlanmoqda...";
+      statusText.textContent = "GPS signali tekshirilmoqda...";
+      statusText.style.color = "var(--muted)";
+      addressDisplay.textContent = "";
+
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          
+          // Kuryer bosganda to'g'ri ochilishi uchun xarita havolasi formatlandi
+          const mapLink = `https://www.google.com/maps?q=${lat},${lon}`;
+          addressInput.value = mapLink;
+
+          btnText.textContent = "Manzil aniqlandi!";
+          statusText.textContent = "✅ Koordinatalar muvaffaqiyatli saqlandi:";
+          statusText.style.color = "var(--green)";
+          
+          // Pastida havola shaklida yozib qo'yadigan qism
+          addressDisplay.textContent = `📍 Tanlangan manzil: ${mapLink}`;
+          
+          geoBtn.style.borderStyle = "solid";
+          geoBtn.style.background = "rgba(26, 46, 26, 0.05)";
+        },
+        (error) => {
+          btnText.textContent = "Qayta urinish";
+          statusText.style.color = "var(--red)";
+          addressDisplay.textContent = "";
+          switch(error.code) {
+            case error.PERMISSION_DENIED:
+              statusText.textContent = "⚠️ Lokatsiyaga ruxsat berilmadi.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              statusText.textContent = "⚠️ GPS ma'lumotlarini olib bo'lmadi.";
+              break;
+            case error.TIMEOUT:
+              statusText.textContent = "⚠️ So'rov vaqti tugadi.";
+              break;
+            default:
+              statusText.textContent = "⚠️ Noma'lum xatolik yuz berdi.";
+          }
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    });
+  }
+
+  // --- MATN FORMAT MASKALARI ---
+  // 1. Telefon raqam
+  const phoneInput = document.getElementById('phone');
+  if(phoneInput) {
+    phoneInput.addEventListener('input', (e) => {
+      let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,2})(\d{0,3})(\d{0,2})(\d{0,2})/);
+      if (!x[2] && x[1] !== '998') {
+        e.target.value = x[1] ? '+998 ' : '';
+        return;
+      }
+      e.target.value = !x[2] ? '+' + x[1] : '+' + x[1] + ' (' + x[2] + ') ' + (x[3] ? x[3] : '') + (x[4] ? '-' + x[4] : '') + (x[5] ? '-' + x[5] : '');
+    });
+  }
+
+  // 2. Karta raqam (Har 4 ta raqamdan keyin joy tashlaydi)
+  const cardInput = document.getElementById('card_number');
+  if(cardInput) {
+    cardInput.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
+      let matches = v.match(/\d{4,16}/g);
+      let match = matches && matches[0] || '';
+      let parts = [];
+      for (let i=0, len=match.length; i<len; i+=4) {
+        parts.push(match.substring(i, i+4));
+      }
+      e.target.value = parts.length > 0 ? parts.join(' ') : v;
+    });
+  }
+
+  // 3. Karta amal qilish muddati (OO/YY)
+  const expiryInput = document.getElementById('card_expiry');
+  if(expiryInput) {
+    expiryInput.addEventListener('input', (e) => {
+      let v = e.target.value.replace(/\D/g, '');
+      e.target.value = v.length >= 2 ? v.substring(0, 2) + '/' + v.substring(2, 4) : v;
+    });
+  }
+});
+</script>
+</body>
+</html>

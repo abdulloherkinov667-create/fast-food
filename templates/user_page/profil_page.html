@@ -370,11 +370,11 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
       <svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </a>
 
-    <a class="menu-item" onclick="showToast('Savat ochilmoqda...')">
+    <a class="menu-item" href="{% url 'savat_page' %}">
       <div class="menu-item-left">
         <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
         <span>Savatcha</span>
-        <span class="item-badge">1</span>
+        {% if cart_count %}<span class="item-badge">{{ cart_count }}</span>{% endif %}
       </div>
       <svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </a>
@@ -441,17 +441,17 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
     <span>Menyu</span>
   </a>
 
-  <a href="#" class="bottom-nav-item" onclick="navClick(this, 'cart')">
+  <a href="{% url 'savat_page' %}" class="bottom-nav-item">
     <svg viewBox="0 0 24 24">
       <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
       <line x1="3" y1="6" x2="21" y2="6" />
       <path d="M16 10a4 4 0 01-8 0" />
     </svg>
     <span>Savat</span>
-    <span class="nav-badge" id="cartBadge">0</span>
+    <span class="nav-badge {% if cart_count %}show{% endif %}" id="cartBadge">{% if cart_count %}{{ cart_count }}{% else %}0{% endif %}</span>
   </a>
 
-  <a href="{% url 'savat_page' %}" class="bottom-nav-item active" onclick="navClick(this, 'profile')">
+  <a href="{% url 'profile_user' %}" class="bottom-nav-item active" onclick="navClick(this, 'profile')">
     <svg viewBox="0 0 24 24">
       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
       <circle cx="12" cy="7" r="4"></circle>
