@@ -5,9 +5,10 @@ from django.conf.urls.static import static
 
 from products.views import menu_home, checkout_html
 from users.views import profile_page, savat_page, registratsiya_page, login_page, logout_user
-from products.views import delete_product_cart
+from products.views import delete_product_cart, update_cart_quantity  
 from users.views import RegisterView, LoginView
-from products.profduct_api import ShoppingCartCreateAPIView
+
+from products.profduct_api import ShoppingCartCreateAPIView, OrderCreateApiViuw
 
 
 urlpatterns = [
@@ -19,12 +20,18 @@ urlpatterns = [
     path('login/', login_page, name='login_page'),
     path('logout/', logout_user, name='logout_user'),
     path('checkout_html/', checkout_html, name='checkout_html'),
+    path('cart/update/<int:pk>/<str:action>/', update_cart_quantity, name='update_cart_quantity'),
+    path('cart/update/<int:pk>/<str:action>/', update_cart_quantity, name='update_cart_quantity'),
     
     
     # api auth    
     path('api/v1/auth/register/', RegisterView.as_view(), name='api_register'),
     path('api/v1/auth/login/', LoginView.as_view(), name='api_login'),
     path('cart/delete/<int:pk>/', delete_product_cart, name='delete_product_cart'),
+    
+    #api rasmiylashtirish
+    path('api/v1/cart/add/', ShoppingCartCreateAPIView.as_view(), name='api_cart_add'),
+    path('api/v1/order/create/', OrderCreateApiViuw.as_view(), name='api_order_create'),
     
     # API - Savat
     path('api/v1/cart/add/', ShoppingCartCreateAPIView.as_view(), name='api_cart_add'),

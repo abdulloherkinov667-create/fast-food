@@ -1,5 +1,8 @@
 from rest_framework import serializers
 from .models import FastFoodProduct
+from rest_framework import serializers
+from .models import ShopingModel, Order
+
 
 class ProductSerializer(serializers.ModelSerializer):
     image_url = serializers.SerializerMethodField()
@@ -55,11 +58,6 @@ class LoginSerializer(serializers.Serializer):
 
 
 # 3. Savat (Shopping Cart) Serializeri
-from rest_framework import serializers
-
-from .models import ShopingModel
-
-
 class ShoppingCartSerializer(serializers.ModelSerializer):
     product_name = serializers.CharField(source='product.name', read_only=True)
     product_price = serializers.DecimalField(
@@ -79,3 +77,13 @@ class ShoppingCartSerializer(serializers.ModelSerializer):
         ]
     def get_item_total_price(self, obj):
         return obj.product.price * obj.quantity
+    
+    
+#order seralaizer bu
+class OrderCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = [
+            'phone', 'address', 'description', 'payment_method',
+            'card_holder_name', 'card_number', 'card_expiry', 'card_cvv',
+        ]

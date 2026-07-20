@@ -87,17 +87,20 @@ class Order(BaseCreateModel):
 class OrderItem(BaseCreateModel):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     product = models.ForeignKey(FastFoodProduct, on_delete=models.SET_NULL, related_name="order_items", null=True)
-    price = models.BigIntegerField(help_text="Sotib olingan vaqtdagi narxi", editable=False) 
+    product_name = models.CharField(max_length=500, blank=True)
+    price = models.BigIntegerField(help_text="Sotib olingan vaqtdagi narxi", editable=False)
     count = models.IntegerField(validators=[MinValueValidator(1)])
-
 
     @property
     def item_total_price(self):
         return self.price * self.count
-    
+
     def __str__(self):
-        return self.product.name
-    
+        return self.product_name or "O'chirilgan mahsulot"
+
     def save(self, *args, **kwargs):
-        self.price = self.product.price
+        if self.product:
+            self.price = self.product.price
+            if not self.product_name:
+                self.product_name = self.product.name
         return super().save(*args, **kwargs)

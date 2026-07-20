@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db.models import Sum
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 
 from .models import Category, FastFoodProduct, ShopingModel
 
@@ -12,10 +13,6 @@ def menu_home(request):
 
     for product in products:
         product.image_url = product.product_image.url if product.product_image else ""
-
-    # Foydalanuvchining hozirgi savatidagi mahsulotlar: {"<product_id>": <quantity>}
-    # Kalitlar string bo'lishi kerak, chunki JS tomonida JSON.parse qilingandan keyin
-    # object kalitlari doim string bo'ladi va biz product.id (int) bilan taqqoslaymiz.
     cart_quantities = {}
     if request.user.is_authenticated:
         cart_quantities = {
@@ -34,24 +31,8 @@ def menu_home(request):
     return render(request, 'menu_home.html', context)
 
 
-@login_required(login_url='login_viuw')
-def savat_page(request):
-    cart_items = (
-        ShopingModel.objects.filter(user=request.user)
-        .select_related('product', 'product__category_product')
-        .order_by('-id')
-    )
-    cart_count = cart_items.aggregate(total=Sum('quantity'))['total'] or 0
-
-    context = {
-        'cart_items': cart_items,
-        'cart_count': cart_count,
-    }
-    return render(request, 'savat.html', context)
-
-
 # Savatdagi bitta qatorni butunlay o'chirish uchun (savat.html dagi chelak tugmasi)
-@login_required(login_url='login_viuw')
+@login_required(login_url='login_page')
 def delete_product_cart(request, pk):
     product_id = pk
     user_id = request.user.id
@@ -63,5 +44,33 @@ def delete_product_cart(request, pk):
     return redirect('savat_page')
 
 
+@login_required(login_url='login_page')
+def update_cart_quantity(request, pk, action):
+    cart_item = get_object_or_404(ShopingModel, id=pk, user=request.user)
+
+    if action == 'increase':
+        cart_item.quantity += 1
+        cart_item.save(update_fields=['quantity'])
+    elif action == 'decrease':
+        cart_item.quantity -= 1
+        if cart_item.quantity <= 0:
+            cart_item.delete()
+        else:
+            cart_item.save(update_fields=['quantity'])
+
+    return redirect('savat_page')
+
+
+@login_required(login_url='login_page')
 def checkout_html(request):
-    return render(request, "user_page/checkout.html")
+    cart_items = ShopingModel.objects.filter(user=request.user).select_related('product')
+    if not cart_items.exists():
+        return redirect('savat_page')
+
+    total_price = sum(item.product.price * item.quantity for item in cart_items)
+
+    context = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+    }
+    return render(request, 'user_page/checkout.html', context)

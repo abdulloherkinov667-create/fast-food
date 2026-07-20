@@ -27,12 +27,8 @@ body{
   overflow-x:hidden;
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-/* HEADER */
 .top-header{text-align:center;padding:24px 20px 10px;background:var(--cream);}
 .logo{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:var(--green);text-decoration:none;display:inline-block;}
 .logo em{font-style:italic}
@@ -40,15 +36,18 @@ body{
 .page-header{text-align:center;padding:15px 20px 25px;animation:fadeUp 0.5s ease both;}
 .page-header p{font-size:13px;letter-spacing:4px;color:var(--muted);font-weight:500;text-transform:uppercase;}
 
-/* KONTEYNER */
 .checkout-container{max-width:600px;margin:0 auto;padding:0 20px;}
 
-/* BOSQICH INDIKATOR */
+.error-box{
+  background:rgba(192,57,43,0.08); border:1px solid rgba(192,57,43,0.3);
+  color:var(--red); border-radius:14px; padding:14px 16px; font-size:13px;
+  margin-bottom:18px;
+}
+
 .steps-row{display:flex;align-items:center;justify-content:center;gap:6px;margin-bottom:26px;animation:fadeUp 0.5s 0.05s ease both;}
 .step-dot{width:8px;height:8px;border-radius:50%;background:var(--border);}
 .step-dot.active{background:var(--gold);width:22px;border-radius:5px;}
 
-/* SECTION CARD */
 .form-section{
   background:var(--white);border:1px solid var(--border);border-radius:20px;
   padding:22px;margin-bottom:18px;box-shadow:0 5px 15px rgba(0,0,0,0.03);
@@ -65,7 +64,6 @@ body{
 }
 .section-sub{font-size:12px;color:var(--muted);margin-bottom:18px;margin-left:34px;}
 
-/* FORM FIELDS */
 .field-group{margin-bottom:16px;}
 .field-group:last-child{margin-bottom:0;}
 .field-label{display:block;font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
@@ -78,80 +76,25 @@ body{
 .field-textarea{resize:vertical;min-height:70px;font-family:inherit;}
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 
-/* LOKATSIYA TUGMASI STILI */
-.geo-btn-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
+.geo-btn-wrapper { display: flex; flex-direction: column; gap: 10px; }
 .location-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  width: 100%;
-  background: var(--cream);
-  border: 1.5px dashed var(--gold);
-  border-radius: 12px;
-  padding: 15px;
-  font-family: "Montserrat", sans-serif;
-  font-size: 13.5px;
-  font-weight: 600;
-  color: var(--green);
-  cursor: pointer;
-  transition: all 0.25s ease;
+  display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%;
+  background: var(--cream); border: 1.5px dashed var(--gold); border-radius: 12px; padding: 15px;
+  font-family: "Montserrat", sans-serif; font-size: 13.5px; font-weight: 600; color: var(--green);
+  cursor: pointer; transition: all 0.25s ease;
 }
-.location-btn:hover {
-  background: rgba(184,150,46,0.08);
-  border-style: solid;
-}
-.location-btn svg {
-  width: 18px;
-  height: 18px;
-  fill: none;
-  stroke: var(--gold);
-  stroke-width: 2;
-}
-.location-status {
-  font-size: 12px;
-  color: var(--muted);
-  font-style: italic;
-  margin-top: 2px;
-}
+.location-btn:hover { background: rgba(184,150,46,0.08); border-style: solid; }
+.location-btn svg { width: 18px; height: 18px; fill: none; stroke: var(--gold); stroke-width: 2; }
+.location-status { font-size: 12px; color: var(--muted); font-style: italic; margin-top: 2px; }
 
-/* NATIJADA CHIQADIGAN MANZIL BLOKI */
-.address-result-box{
-  background:rgba(184,150,46,0.08);
-  border:1px solid rgba(184,150,46,0.3);
-  border-radius:12px;
-  padding:12px;
-  margin-top:4px;
-}
-.address-result-map{
-  width:100%;
-  height:130px;
-  border-radius:8px;
-  overflow:hidden;
-  margin-bottom:10px;
-  background:#e8e5dc;
-}
-.address-result-map img{
-  width:100%;height:100%;object-fit:cover;display:block;
-}
-.address-result-text-row{
-  display:flex;
-  align-items:flex-start;
-  gap:10px;
-}
-.address-result-text-row svg{
-  width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:2;flex-shrink:0;margin-top:2px;
-}
-.address-result-text{
-  font-size:13px;line-height:1.5;color:var(--text);
-}
+.address-result-box{ background:rgba(184,150,46,0.08); border:1px solid rgba(184,150,46,0.3); border-radius:12px; padding:12px; margin-top:4px; }
+.address-result-map{ width:100%; height:130px; border-radius:8px; overflow:hidden; margin-bottom:10px; background:#e8e5dc; }
+.address-result-map img{ width:100%;height:100%;object-fit:cover;display:block; }
+.address-result-text-row{ display:flex; align-items:flex-start; gap:10px; }
+.address-result-text-row svg{ width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:2;flex-shrink:0;margin-top:2px; }
+.address-result-text{ font-size:13px;line-height:1.5;color:var(--text); }
 .address-result-text b{color:var(--green);font-weight:700;}
 
-/* TO'LOV USULI TANLASH — RADIO HACK */
 .pay-tabs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:2px;}
 .pay-input{position:absolute;opacity:0;pointer-events:none;}
 .pay-label{
@@ -163,37 +106,20 @@ body{
 .pay-label span{font-size:12px;font-weight:700;color:var(--muted);transition:color 0.2s;}
 
 #pay_cash:checked ~ .pay-tabs label[for="pay_cash"],
-#pay_card:checked ~ .pay-tabs label[for="pay_card"]{
-  border-color:var(--gold); background:rgba(184,150,46,0.08);
-}
+#pay_card:checked ~ .pay-tabs label[for="pay_card"]{ border-color:var(--gold); background:rgba(184,150,46,0.08); }
 #pay_cash:checked ~ .pay-tabs label[for="pay_cash"] svg,
 #pay_card:checked ~ .pay-tabs label[for="pay_card"] svg{ stroke:var(--gold); }
 #pay_cash:checked ~ .pay-tabs label[for="pay_cash"] span,
 #pay_card:checked ~ .pay-tabs label[for="pay_card"] span{ color:var(--gold); }
 
-/* Karta va Naqd maydonlari dinamikasi */
-.card-fields{
-  max-height:0; opacity:0; overflow:hidden; margin-top:0;
-  transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease;
-}
-#pay_card:checked ~ .card-fields{
-  max-height:400px; opacity:1; margin-top:18px;
-  padding-top:18px; border-top:1px dashed var(--border);
-}
+.card-fields{ max-height:0; opacity:0; overflow:hidden; margin-top:0; transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease; }
+#pay_card:checked ~ .card-fields{ max-height:400px; opacity:1; margin-top:18px; padding-top:18px; border-top:1px dashed var(--border); }
 
-.cash-note{
-  max-height:0; opacity:0; overflow:hidden;
-  transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease;
-}
-#pay_cash:checked ~ .cash-note{
-  max-height:120px; opacity:1; margin-top:16px; padding-top:16px; border-top:1px dashed var(--border);
-}
-.cash-note-inner{
-  display:flex; gap:10px; align-items:flex-start; font-size:12.5px; color:var(--muted); line-height:1.6;
-}
+.cash-note{ max-height:0; opacity:0; overflow:hidden; transition: max-height 0.35s ease, opacity 0.3s ease, margin-top 0.35s ease; }
+#pay_cash:checked ~ .cash-note{ max-height:120px; opacity:1; margin-top:16px; padding-top:16px; border-top:1px dashed var(--border); }
+.cash-note-inner{ display:flex; gap:10px; align-items:flex-start; font-size:12.5px; color:var(--muted); line-height:1.6; }
 .cash-note-inner svg{width:18px;height:18px;stroke:var(--gold);fill:none;stroke-width:2;flex-shrink:0;margin-top:1px;}
 
-/* BUYURTMA TARKIBI */
 .summary-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px;}
 .summary-item{display:flex;align-items:center;gap:12px;}
 .summary-item-img{width:48px;height:48px;border-radius:10px;overflow:hidden;flex-shrink:0;background:#e8e5dc;}
@@ -210,20 +136,15 @@ body{
 .summary-total-val{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--green);}
 .summary-total-val span{font-family:"Montserrat",sans-serif;font-size:12px;color:var(--muted);}
 
-/* SUBMIT */
 .submit-btn{
   display:block;width:100%;background:var(--green);color:#fff;border:none;border-radius:30px;
   padding:17px;font-family:"Montserrat",sans-serif;font-size:14px;font-weight:700;letter-spacing:0.8px;
   cursor:pointer;transition:all 0.25s;box-shadow:0 6px 18px rgba(26,46,26,0.25);
   margin-top:6px;
 }
-.submit-btn:hover{background:var(--green-mid);transform:translateY(-2px);}
-.submit-btn:active{transform:translateY(0);}
+.submit-btn:hover{background:var(--green-mid); transform:translateY(-2px);}
 
-.back-link{
-  display:block;text-align:center;margin-top:16px;font-size:12.5px;color:var(--muted);
-  text-decoration:none;font-weight:600;
-}
+.back-link{ display:block;text-align:center;margin-top:16px;font-size:12.5px;color:var(--muted); text-decoration:none;font-weight:600; }
 .back-link:hover{color:var(--green);}
 
 @media (max-width:400px){
@@ -236,7 +157,7 @@ body{
 <body>
 
 <div class="top-header">
-  <a href="#" class="logo">Gusto <em>&</em> Co.</a>
+  <a href="{% url 'menu_home' %}" class="logo">Gusto <em>&</em> Co.</a>
 </div>
 
 <div class="page-header">
@@ -245,14 +166,21 @@ body{
 
 <div class="checkout-container">
 
+  {% if messages %}
+    {% for message in messages %}
+      <div class="error-box">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
   <div class="steps-row">
     <div class="step-dot active"></div>
     <div class="step-dot active"></div>
     <div class="step-dot"></div>
   </div>
 
-  <form method="post" action="">
-    
+  <form method="post" action="{% url 'checkout_html' %}">
+    {% csrf_token %}
+
     <div class="form-section">
       <div class="section-title"><span class="num">1</span> Yetkazib berish</div>
       <div class="section-sub">Buyurtma qayerga va kimga yetkazilishi kerak</div>
@@ -272,7 +200,6 @@ body{
           <input type="hidden" id="address" name="address" required>
           <div id="location-status" class="location-status">Lokatsiya hali tanlanmagan</div>
 
-          <!-- Statik namuna: dinamik logikani o'zingiz ulaysiz -->
           <div id="detected-address-display" class="address-result-box" style="display:none;">
             <div class="address-result-map">
               <img id="detected-address-map-img" src="https://images.unsplash.com/photo-1524661135-423995f22d0b?w=500&q=80" alt="Manzil xaritada">
@@ -280,7 +207,7 @@ body{
             <div class="address-result-text-row">
               <svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 0-8 8c0 5.25 8 12 8 12s8-6.75 8-12a8 8 0 0 0-8-8z"></path><circle cx="12" cy="10" r="3"></circle></svg>
               <div class="address-result-text">
-                Buyurtma qilmoqchi bo'lgan manzilingiz: <b id="detected-address-value">Ташкент, 1-й проезд Заркент, 2</b>
+                Buyurtma qilmoqchi bo'lgan manzilingiz: <b id="detected-address-value"></b>
               </div>
             </div>
           </div>
@@ -347,38 +274,44 @@ body{
       <div class="section-sub">Savatingizdagi mahsulotlar</div>
 
       <div class="summary-list">
+        {% for item in cart_items %}
         <div class="summary-item">
           <div class="summary-item-img">
-            <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=120&q=80" alt="Mahsulot">
+            {% if item.product.product_image %}
+              <img src="{{ item.product.product_image.url }}" alt="{{ item.product.name }}">
+            {% else %}
+              <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=120&q=80" alt="{{ item.product.name }}">
+            {% endif %}
           </div>
           <div class="summary-item-info">
-            <div class="summary-item-name">Premium Pizza Gusto</div>
-            <div class="summary-item-qty">2 dona</div>
+            <div class="summary-item-name">{{ item.product.name }}</div>
+            <div class="summary-item-qty">{{ item.quantity }} dona</div>
           </div>
           <div class="summary-item-price">
-            150 000 <span>so'm</span>
+            {{ item.line_total|floatformat:0 }} <span>so'm</span>
           </div>
         </div>
+        {% endfor %}
       </div>
 
       <div class="summary-divider"></div>
 
       <div class="summary-total-row">
         <span class="summary-total-label">Umumiy to'lov:</span>
-        <span class="summary-total-val">150 000 <span>so'm</span></span>
+        <span class="summary-total-val">{{ total_price|floatformat:0 }} <span>so'm</span></span>
       </div>
     </div>
 
     <button type="submit" class="submit-btn">Buyurtmani tasdiqlash</button>
   </form>
 
-  <a href="#" class="back-link">← Savatga qaytish</a>
+  <a href="{% url 'savat_page' %}" class="back-link">← Savatga qaytish</a>
 
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // --- GPS GEOLOCATION TUGMASI ---
+  // GPS lokatsiya (bu faqat brauzer API bo'lgani uchun JS-siz ilojsiz)
   const geoBtn = document.getElementById('geo-locator-btn');
   const addressInput = document.getElementById('address');
   const statusText = document.getElementById('location-status');
@@ -404,20 +337,12 @@ document.addEventListener('DOMContentLoaded', () => {
           const lat = position.coords.latitude;
           const lon = position.coords.longitude;
 
-          // Kuryer va backend uchun koordinata shu yerda saqlanadi (foydalanuvchiga ko'rinmaydi)
           addressInput.value = `${lat},${lon}`;
-
-          // TODO (o'zingiz ulaysiz): lat/lon ni reverse-geocoding orqali
-          // haqiqiy manzilga (ko'cha, uy) aylantirib, addressValueEl.textContent ga yozing.
-          // Xarita rasmini xam kerak bo'lsa shu yerda static map API (masalan Google Static Maps)
-          // orqali dinamik qilib #detected-address-map-img ning src ini yangilaysiz.
-          // Hozircha ikkalasi ham statik (o'zgarmas) namuna sifatida ko'rsatilmoqda:
-          addressValueEl.textContent = "Ташкент, 1-й проезд Заркент, 2";
+          addressValueEl.textContent = `Koordinata: ${lat.toFixed(5)}, ${lon.toFixed(5)}`;
 
           btnText.textContent = "Manzil aniqlandi!";
           statusText.textContent = "✅ Manzil muvaffaqiyatli aniqlandi";
           statusText.style.color = "var(--green)";
-
           addressDisplay.style.display = "flex";
 
           geoBtn.style.borderStyle = "solid";
@@ -446,8 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- MATN FORMAT MASKALARI ---
-  // 1. Telefon raqam
+  // Telefon raqam maskasi
   const phoneInput = document.getElementById('phone');
   if(phoneInput) {
     phoneInput.addEventListener('input', (e) => {
@@ -460,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 2. Karta raqam (Har 4 ta raqamdan keyin joy tashlaydi)
+  // Karta raqam maskasi
   const cardInput = document.getElementById('card_number');
   if(cardInput) {
     cardInput.addEventListener('input', (e) => {
@@ -475,7 +399,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // 3. Karta amal qilish muddati (OO/YY)
+  // Karta muddati maskasi
   const expiryInput = document.getElementById('card_expiry');
   if(expiryInput) {
     expiryInput.addEventListener('input', (e) => {

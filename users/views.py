@@ -26,17 +26,17 @@ def profile_page(request):
     return render(request, "user_page/profil_page.html", {"user": profile_user})
 
 
-@login_required(login_url='login_page') 
+@login_required(login_url='login_page')  # <- tuzatildi
 def savat_page(request):
-    cart_items = ShopingModel.objects.filter(user=request.user).select_related('product')
-    total_sum = sum(item.product.price for item in cart_items if item.product)
-
-    context = {
-        'cart_items': cart_items,
-        'total_sum': total_sum,
-        'cart_count': cart_items.count(),
-    }
-    return render(request, "user_page/savat.html", context)
+    cart_items = ShopingModel.objects.filter(user=request.user)
+    total_price = 0
+    total_count = 0
+    for item in cart_items:
+        item.line_total = item.product.price * item.quantity
+        total_price += item.line_total
+        total_count += item.quantity
+    context = {'cart_items': cart_items, 'cart_count': total_count, 'total_price': total_price}
+    return render(request, 'user_page/savat.html', context) 
 
 
 def registratsiya_page(request):

@@ -5,8 +5,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import FastFoodProduct, ShopingModel
-from .serializers import ShoppingCartSerializer
+from .models import FastFoodProduct, ShopingModel, Order, OrderItem
+from .serializers import ShoppingCartSerializer, OrderCreateSerializer
 
 
 class ShoppingCartCreateAPIView(APIView):
@@ -72,3 +72,46 @@ class ShoppingCartCreateAPIView(APIView):
                 'success': False,
                 'error': str(e)
             }, status=status.HTTP_400_BAD_REQUEST)
+            
+            
+#order ni api qilish
+class OrderCreateApiViuw(APIView):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return Response({
+                'success': False,
+                'error': 'Login qilinmagan!',
+                'redirect': '/login/'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+            
+        cart_items = ShopingModel.objects.filter(user=request.user).select_related('prduct') 
+        if not cart_items.exists():
+            return Response({'success': False, 'error': "Savatingiz bo'sh"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        serializer = OrderCreateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response({'success': False, 'errors': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        
+        data = serializer.validated_data
+        payment_method = data.get('payment_method', 'cash')
+        
+        order = Order.objects.create(
+            user=request.user,
+            phone=data.get('phone'),
+            address=data.get('address'),
+            description=data.get('description', ''),
+            payment_method=payment_method,
+            card_holder_name=data.get('card_holder_name') if payment_method == 'payme' else None,
+            card_number=data.get('card_number') if payment_method == 'payme' else None,
+            card_expiry=data.get('card_expiry') if payment_method == 'payme' else None,
+            card_cvv=data.get('card_cvv') if payment_method == 'payme' else None,
+        )
+        
+        for item in cart_items:
+            OrderItem.objects.create(order=order, product=item.product, count=item.quantity)
+            
+        return Response({
+            'success': True,
+            'order_id': order.id,
+            'message': "✓ Buyurtmangiz muvaffaqiyatli qabul qilindi!",
+        }, status=status.HTTP_201_CREATED)
