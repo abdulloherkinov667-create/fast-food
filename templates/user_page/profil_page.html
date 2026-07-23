@@ -19,7 +19,6 @@
 }
 body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--text);min-height:100vh;padding-bottom:80px;overflow-x:hidden;}
 
-/* --- KUCHAYTIRILGAN JONLI ANIMATSIYALAR --- */
 @keyframes superFadeUp {
   from { opacity: 0; transform: translateY(50px) scale(0.9); }
   to { opacity: 1; transform: translateY(0) scale(1); }
@@ -56,15 +55,12 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
   100% { transform: scale(1); opacity: 1; }
 }
 
-/* LOGO HEADER */
 .top-header{text-align:center;padding:24px 20px 10px;background:var(--cream);}
 .logo{font-family:"Playfair Display",serif;font-size:28px;font-weight:700;color:var(--green);text-decoration:none;display:inline-block;}
 .logo em{font-style:italic}
 
-/* PROFIL KONTEYNERI */
 .profile-container{max-width:600px;margin:0 auto;padding:0 20px;}
 
-/* HERO BANNER */
 .profile-hero{
   background:var(--green);border-radius:24px;
   padding:45px 24px 60px;margin-bottom:0;
@@ -78,10 +74,9 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
 .avatar-wrap{position:relative;width:95px;height:95px;animation:avatarPop 0.7s 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) both;}
 .avatar-wrap img{width:100%;height:100%;border-radius:50%;object-fit:cover;border:4px solid rgba(255,255,255,0.3);display:block;box-shadow: 0 8px 25px rgba(0,0,0,0.2);}
 
-.hero-name{font-family:"Playfair Display",serif;font-size:26px;font-weight:700;color:#fff;animation:superFadeUp 0.8s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;}
+.hero-name{font-family:"Playfair Display",serif;font-size:26px;font-weight:700;color:#fff;animation:superFadeUp 0.8s 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;text-align:center;}
 .hero-phone{font-size:15px;color:rgba(255,255,255,0.55);animation:superFadeUp 0.8s 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;}
 
-/* STAT CARDS */
 .stat-row{
   display:grid;grid-template-columns:1fr 1fr;gap:15px;
   margin-top:-30px;margin-bottom:25px;
@@ -98,13 +93,17 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
 .stat-num{font-family:"Playfair Display",serif;font-size:26px;font-weight:700;color:var(--green);}
 .stat-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
 
-/* MENU SECTIONS */
 .menu-section{
   background:var(--white);border:1px solid var(--border);border-radius:20px;
   overflow:hidden;margin-bottom:25px;box-shadow:0 5px 15px rgba(0,0,0,0.03);
   animation:elasticSlide 0.8s 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-.section-title{font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:800;padding:20px 22px 10px;}
+.section-title{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--gold);font-weight:800;padding:20px 22px 10px;
+}
+.section-title a{color:var(--muted);text-decoration:none;font-size:11px;letter-spacing:0.5px;text-transform:none;font-weight:700;}
+.section-title a:hover{color:var(--green);}
 
 .menu-item{
   display:flex;align-items:center;justify-content:space-between;padding:18px 22px;
@@ -122,7 +121,6 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
 .chevron{stroke:var(--border) !important;width:18px !important;transition:all 0.3s;flex-shrink:0;}
 .menu-item:hover .chevron{transform:translateX(5px);stroke:var(--green) !important;}
 
-/* SAVATCHA TUGMASI ICHIDAGI JONLI KO'RSATKICH ("1") */
 .item-badge {
   background: var(--gold);
   color: #fff;
@@ -138,11 +136,12 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
   animation: pulseBadge 2s infinite;
 }
 
-/* ORDER ITEMS STYLING */
 .order-item{
   display:flex;align-items:center;gap:15px;padding:18px 22px;
   border-bottom:1px solid var(--border);transition:all 0.3s ease;cursor:pointer;
+  text-decoration:none;color:inherit;
 }
+.order-item:last-child{border-bottom:none}
 .order-item:hover{background:rgba(245,243,236,0.8);padding-left:28px;}
 .order-img-wrap{
   width:56px;height:56px;border-radius:12px;overflow:hidden;
@@ -150,8 +149,31 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
   transition:transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 .order-item:hover .order-img-wrap{transform:scale(1.1) rotate(2deg);}
+.order-info{flex:1;min-width:0;}
+.order-name{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.order-date{font-size:11px;color:var(--muted);margin-top:3px;}
+.order-right{text-align:right;flex-shrink:0;}
+.order-price{font-size:13px;font-weight:700;white-space:nowrap;}
+.order-price small{font-size:10px;font-weight:500;color:var(--muted);}
 
-/* LOGOUT TUGMASI */
+/* BO'SH HOLAT (Buyurtma yo'q bo'lganda) */
+.empty-orders{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:36px 22px;gap:10px;
+}
+.empty-orders-icon{
+  width:52px;height:52px;border-radius:50%;background:rgba(26,46,26,0.07);
+  display:flex;align-items:center;justify-content:center;margin-bottom:4px;
+}
+.empty-orders-icon svg{width:24px;height:24px;stroke:var(--green);fill:none;stroke-width:2;}
+.empty-orders-title{font-family:"Playfair Display",serif;font-size:16px;font-weight:700;color:var(--green);}
+.empty-orders-text{font-size:12px;color:var(--muted);line-height:1.5;max-width:280px;}
+.empty-orders-btn{
+  margin-top:6px;display:inline-block;background:var(--gold);color:#fff;text-decoration:none;
+  border-radius:999px;padding:10px 22px;font-size:12px;font-weight:700;transition:all 0.3s;
+}
+.empty-orders-btn:hover{transform:translateY(-2px);background:#a27f1d;}
+
 .logout-btn{
   display:block;width:100%;background:none;border:2px solid #c0392b;color:#c0392b;
   border-radius:35px;padding:16px;font-family:"Montserrat",sans-serif;font-size:14px;font-weight:700;
@@ -160,7 +182,6 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
 .logout-btn:hover{background:#c0392b;color:#fff;box-shadow:0 8px 20px rgba(192,57,43,0.3);transform:translateY(-3px);}
 .logout-btn:active{transform:translateY(0) scale(0.98);}
 
-/* LOGOUT MODAL - ekran markazida kichkina popup */
 .logout-modal{
   border:none;border-radius:20px;padding:22px;
   width:88%;max-width:320px;
@@ -191,8 +212,6 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
 .register-btn{display:inline-block;background:var(--gold);color:#fff;text-decoration:none;border-radius:999px;padding:12px 20px;font-weight:700;transition:all 0.3s;}
 .register-btn:hover{transform:translateY(-2px);background:#a27f1d;}
 
-
-/* ── UZUM STYLE PASTKI NAVBAR (MENU_HOME BILAN BIR XIL) ── */
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -241,7 +260,7 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
   color: var(--text);
 }
 .bottom-nav-item.active svg {
-  fill: currentColor; /* Bosilganda ichi bo'yaladi */
+  fill: currentColor;
 }
 .bottom-nav-item.active span {
   font-weight: 600;
@@ -267,28 +286,50 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
   display: flex;
 }
 
-/* TOAST MESSAGE */
 .toast{
   position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(90px);
   background:var(--green);color:#fff;border-radius:30px;padding:13px 26px;
   font-size:12px;font-weight:600;z-index:900;opacity:0;
   transition:all 0.38s cubic-bezier(0.32, 0, 0.2, 1);
   box-shadow:0 6px 24px rgba(26,46,26,0.28);
+  max-width:90%;text-align:center;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* SHIMMER FOR LOADING */
 .order-img-wrap::before{
   content:'';position:absolute;inset:0;z-index:1;
   background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
   background-size:400px 100%;animation:shimmer 1.6s infinite;
 }
-.order-img-wrap img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s;}
+.order-img-wrap img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s;position:relative;z-index:2;}
 .order-img-wrap img.loaded{opacity:1}
 .order-img-wrap.ready::before{display:none}
+.order-img-wrap.no-image::before{display:none}
 
-.status-done{background:rgba(26,46,26,0.08);color:var(--green);padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;}
-.status-way{background:rgba(184,150,46,0.12);color:var(--gold);padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;}
+.status-done{background:rgba(26,46,26,0.08);color:var(--green);padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;display:inline-block;margin-top:4px;}
+.status-way{background:rgba(184,150,46,0.12);color:var(--gold);padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;display:inline-block;margin-top:4px;}
+.status-cancel{background:rgba(192,57,43,0.1);color:#c0392b;padding:4px 10px;border-radius:20px;font-size:9px;font-weight:800;display:inline-block;margin-top:4px;}
+
+/* ── MOBIL UCHUN MOSLASHUV ── */
+@media (max-width: 480px){
+  .profile-container{padding:0 14px;}
+  .profile-hero{padding:36px 18px 55px;border-radius:20px;}
+  .avatar-wrap{width:80px;height:80px;}
+  .hero-name{font-size:22px;}
+  .stat-row{gap:10px;}
+  .stat-card{padding:14px 6px;}
+  .stat-num{font-size:22px;}
+  .menu-item{padding:15px 16px;}
+  .order-item{padding:14px 16px;gap:12px;}
+  .order-img-wrap{width:48px;height:48px;}
+  .order-name{font-size:12.5px;}
+  .logout-btn{font-size:13px;padding:14px;}
+  .bottom-nav-item{font-size:9px;}
+}
+@media (max-width: 360px){
+  .hero-name{font-size:20px;}
+  .order-price{font-size:12px;}
+}
 </style>
 </head>
 <body>
@@ -320,48 +361,65 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
 
   <div class="stat-row">
     <div class="stat-card">
-      <div class="stat-num">14</div>
+      <div class="stat-num">{{ total_orders_count|default:0 }}</div>
       <div class="stat-label">Buyurtma</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num">38</div>
+      <div class="stat-num">{{ total_items_count|default:0 }}</div>
       <div class="stat-label">Taom yedim</div>
     </div>
   </div>
 
   <div class="menu-section">
-    <div class="section-title">So'nggi buyurtmalar</div>
-    <div class="order-item" onclick="showToast('Premium Bifsteks buyurtmasi')">
-      <div class="order-img-wrap">
-        <img src="https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=160&q=80" alt="Food">
-      </div>
-      <div class="order-info">
-        <div class="order-name" style="font-weight:700">Zaytunli Premium Bifsteks</div>
-        <div class="order-date">Bugun · 13:30</div>
-      </div>
-      <div class="order-right">
-        <div class="order-price">85 000 <small>so'm</small></div>
-        <div class="order-status status-way">Yo'lda</div>
-      </div>
+    <div class="section-title">
+      <span>So'nggi buyurtmalar</span>
+      {% if has_orders %}<a href="{% url 'order_history_page' %}">Barchasi</a>{% endif %}
     </div>
-    <div class="order-item" onclick="showToast('Tiramisu buyurtmasi')">
-      <div class="order-img-wrap">
-        <img src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=160&q=80" alt="Food">
+
+    {% if has_orders %}
+      {% for order in last_orders %}
+        {% with first_item=order.items.all.0 %}
+        <a class="order-item" href="{% url 'order_history_page' %}">
+          <div class="order-img-wrap {% if not first_item.product.product_image %}no-image{% endif %}">
+            {% if first_item.product.product_image %}
+              <img src="{{ first_item.product.product_image.url }}" alt="{{ first_item.product_name }}">
+            {% endif %}
+          </div>
+          <div class="order-info">
+            <div class="order-name">
+              {{ first_item.product_name|default:"Mahsulot" }}
+              {% if order.items.count > 1 %} +{{ order.items.count|add:"-1" }}{% endif %}
+            </div>
+            <div class="order-date">{{ order.created_at|date:"d.m.Y H:i" }}</div>
+          </div>
+          <div class="order-right">
+            <div class="order-price">{{ order.total_order_price|floatformat:0 }} <small>so'm</small></div>
+            {% if order.is_status == 'Yetkazildi' %}
+              <div class="status-done">Yetkazildi</div>
+            {% elif order.is_status == 'Bekor qilindi' or order.is_status == 'Qaytarildi' %}
+              <div class="status-cancel">{{ order.is_status }}</div>
+            {% else %}
+              <div class="status-way">{{ order.is_status }}</div>
+            {% endif %}
+          </div>
+        </a>
+        {% endwith %}
+      {% endfor %}
+    {% else %}
+      <div class="empty-orders">
+        <div class="empty-orders-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+        </div>
+        <div class="empty-orders-title">Hali buyurtma yo'q</div>
+        <div class="empty-orders-text">Siz hali birorta ham buyurtma bermagansiz. Menyudan taom tanlab, birinchi buyurtmangizni bering!</div>
+        <a href="{% url 'menu_home' %}" class="empty-orders-btn">Menyuga o'tish</a>
       </div>
-      <div class="order-info">
-        <div class="order-name" style="font-weight:700">Tiramisu Royale</div>
-        <div class="order-date">Kecha · 19:00</div>
-      </div>
-      <div class="order-right">
-        <div class="order-price">32 000 <small>so'm</small></div>
-        <div class="order-status status-done">Yetkazildi</div>
-      </div>
-    </div>
+    {% endif %}
   </div>
 
   <div class="menu-section">
     <div class="section-title">Shaxsiy sahifa</div>
-    
+
     <a class="menu-item" onclick="showToast('Profil sozlamalari ochilmoqda...')">
       <div class="menu-item-left">
         <svg class="gear-icon" viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
@@ -379,7 +437,7 @@ body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--tex
       <svg class="chevron" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
     </a>
 
-    <a class="menu-item" onclick="showToast('Tarix yuklanmoqda...')">
+    <a class="menu-item" href="{% url 'order_history_page' %}">
       <div class="menu-item-left">
         <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
         <span>Buyurtmalar tarixi</span>

@@ -12,9 +12,10 @@ from products.serializers import LoginSerializer
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from .models import Users
+from products.models import Order
+
 
 def profile_page(request):
-    # Prefer Django authentication user when available, fallback to session-stored id
     profile_user = None
     if request.user and request.user.is_authenticated:
         profile_user = request.user
@@ -23,10 +24,37 @@ def profile_page(request):
         if profile_user_id:
             profile_user = Users.objects.filter(id=profile_user_id).first()
 
-    return render(request, "user_page/profil_page.html", {"user": profile_user})
+    last_orders = []
+    total_orders_count = 0
+    total_items_count = 0
+
+    if profile_user:
+        orders_qs = Order.objects.filter(user=profile_user).order_by('-created_at').prefetch_related('items')
+        total_orders_count = orders_qs.count()
+        total_items_count = sum(o.items.count() for o in orders_qs)
+        last_orders = orders_qs[:2]  # faqat oxirgi 2 ta
+
+    context = {
+        "user": profile_user,
+        "last_orders": last_orders,
+        "has_orders": total_orders_count > 0,
+        "total_orders_count": total_orders_count,
+        "total_items_count": total_items_count,
+    }
+    return render(request, "user_page/profil_page.html", context)
 
 
-@login_required(login_url='login_page')  # <- tuzatildi
+@login_required(login_url='login_page')
+def order_history_page(request):
+    orders = Order.objects.filter(user=request.user).order_by('-created_at').prefetch_related('items')
+    context = {
+        "orders": orders,
+        "has_orders": orders.exists(),
+    }
+    return render(request, "user_page/buyurtma_tarixi.html", context)
+
+
+@login_required(login_url='login_page') 
 def savat_page(request):
     cart_items = ShopingModel.objects.filter(user=request.user)
     total_price = 0
@@ -82,3 +110,6 @@ def logout_user(request):
         logout(request)
         messages.success(request, "Tizimdan chiqdingiz.")
     return redirect("menu_home")
+
+def buyurtma_tarixi(request):
+    return render(request, 'user_page/buyurtma_tarixi.html')

@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+<title>Gusto & Co. — Buyurtmalar tarixi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --green:#1a2e1a;
+  --green-mid:#2d4a2d;
+  --gold:#b8962e;
+  --cream:#f5f3ec;
+  --white:#ffffff;
+  --text:#1a1a1a;
+  --muted:#6b6b5a;
+  --border:#e0ddd4;
+}
+body{font-family:"Montserrat",sans-serif;background:var(--cream);color:var(--text);min-height:100vh;padding-bottom:80px;overflow-x:hidden;}
+
+@keyframes superFadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes popIn {
+  0% { transform: scale(0.88); opacity: 0; }
+  70% { transform: scale(1.04); }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes shimmer {
+  0% { background-position: -400px 0 }
+  100% { background-position: 400px 0 }
+}
+
+/* HEADER */
+.page-header{
+  display:flex;align-items:center;gap:14px;
+  padding:20px 20px 14px;background:var(--cream);
+  max-width:600px;margin:0 auto;
+}
+.back-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--white);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;text-decoration:none;
+  transition:all 0.25s;
+}
+.back-btn:hover{background:var(--green);border-color:var(--green);}
+.back-btn:hover svg{stroke:#fff;}
+.back-btn svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:2.2;transition:all 0.25s;}
+.page-title{font-family:"Playfair Display",serif;font-size:22px;font-weight:700;color:var(--green);}
+.page-subtitle{font-size:12px;color:var(--muted);margin-top:2px;}
+
+.orders-container{max-width:600px;margin:0 auto;padding:0 20px;}
+
+/* ORDER CARD */
+.order-card{
+  background:var(--white);border:1px solid var(--border);border-radius:20px;
+  margin-bottom:16px;overflow:hidden;box-shadow:0 5px 15px rgba(0,0,0,0.03);
+  animation:superFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.order-card-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 18px;border-bottom:1px solid var(--border);
+}
+.order-card-id{font-size:13px;font-weight:800;color:var(--green);}
+.order-card-date{font-size:11px;color:var(--muted);margin-top:2px;}
+
+.status-done{background:rgba(26,46,26,0.08);color:var(--green);padding:5px 12px;border-radius:20px;font-size:10px;font-weight:800;white-space:nowrap;}
+.status-way{background:rgba(184,150,46,0.12);color:var(--gold);padding:5px 12px;border-radius:20px;font-size:10px;font-weight:800;white-space:nowrap;}
+.status-cancel{background:rgba(192,57,43,0.1);color:#c0392b;padding:5px 12px;border-radius:20px;font-size:10px;font-weight:800;white-space:nowrap;}
+
+.order-card-items{padding:6px 18px;}
+.order-card-item{
+  display:flex;align-items:center;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+.order-card-item:last-child{border-bottom:none;}
+.item-img-wrap{
+  width:48px;height:48px;border-radius:10px;overflow:hidden;flex-shrink:0;
+  background:#e8e5dc;position:relative;
+}
+.item-img-wrap::before{
+  content:'';position:absolute;inset:0;z-index:1;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4),transparent);
+  background-size:400px 100%;animation:shimmer 1.6s infinite;
+}
+.item-img-wrap img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 0.5s;position:relative;z-index:2;}
+.item-img-wrap img.loaded{opacity:1}
+.item-img-wrap.ready::before{display:none}
+.item-img-wrap.no-image::before{display:none}
+.item-info{flex:1;min-width:0;}
+.item-name{font-size:13px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.item-count{font-size:11px;color:var(--muted);margin-top:2px;}
+.item-price{font-size:12.5px;font-weight:700;flex-shrink:0;white-space:nowrap;}
+
+.order-card-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;background:var(--cream);
+}
+.order-card-footer .label{font-size:11px;color:var(--muted);font-weight:600;}
+.order-card-footer .total{font-size:16px;font-weight:800;color:var(--green);font-family:"Playfair Display",serif;}
+
+/* BO'SH HOLAT */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:60px 24px;gap:14px;
+  background:var(--white);border:1px solid var(--border);border-radius:20px;
+  animation:superFadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.empty-state-icon{
+  width:70px;height:70px;border-radius:50%;background:rgba(26,46,26,0.07);
+  display:flex;align-items:center;justify-content:center;margin-bottom:6px;
+}
+.empty-state-icon svg{width:32px;height:32px;stroke:var(--green);fill:none;stroke-width:1.8;}
+.empty-state-title{font-family:"Playfair Display",serif;font-size:20px;font-weight:700;color:var(--green);}
+.empty-state-text{font-size:13px;color:var(--muted);line-height:1.6;max-width:300px;}
+.empty-state-btn{
+  margin-top:8px;display:inline-block;background:var(--gold);color:#fff;text-decoration:none;
+  border-radius:999px;padding:13px 26px;font-size:13px;font-weight:700;transition:all 0.3s;
+}
+.empty-state-btn:hover{transform:translateY(-2px);background:#a27f1d;}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 400;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.04);
+}
+.bottom-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 500;
+  gap: 4px;
+  flex: 1;
+  height: 100%;
+  transition: color 0.2s;
+  position: relative;
+  cursor: pointer;
+  font-family: inherit;
+}
+.bottom-nav-item svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: fill 0.2s, color 0.2s;
+}
+.bottom-nav-item:hover,
+.bottom-nav-item.active {
+  color: var(--text);
+}
+.bottom-nav-item.active svg { fill: currentColor; }
+.bottom-nav-item.active span { font-weight: 600; }
+.nav-badge {
+  position: absolute;
+  top: 6px;
+  right: calc(50% - 20px);
+  background: var(--gold);
+  color: #fff;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  animation: popIn 0.3s ease both;
+}
+.nav-badge.show { display: flex; }
+
+/* ── MOBIL UCHUN MOSLASHUV ── */
+@media (max-width: 480px){
+  .page-header{padding:16px 14px 12px;}
+  .page-title{font-size:19px;}
+  .orders-container{padding:0 14px;}
+  .order-card-header{padding:13px 14px;}
+  .order-card-items{padding:4px 14px;}
+  .order-card-footer{padding:12px 14px;}
+  .item-img-wrap{width:42px;height:42px;}
+  .item-name{font-size:12px;}
+  .empty-state{padding:44px 18px;}
+}
+@media (max-width: 360px){
+  .order-card-id{font-size:12px;}
+  .total{font-size:14px;}
+}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <a href="{% url 'profile_user' %}" class="back-btn">
+    <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </a>
+  <div>
+    <div class="page-title">Buyurtmalar tarixi</div>
+    {% if has_orders %}
+      <div class="page-subtitle">Jami {{ orders|length }} ta buyurtma</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="orders-container">
+
+  {% if has_orders %}
+    {% for order in orders %}
+    <div class="order-card">
+      <div class="order-card-header">
+        <div>
+          <div class="order-card-id">Buyurtma #{{ order.id }}</div>
+          <div class="order-card-date">{{ order.created_at|date:"d.m.Y H:i" }}</div>
+        </div>
+        {% if order.is_status == 'Yetkazildi' %}
+          <span class="status-done">Yetkazildi</span>
+        {% elif order.is_status == 'Bekor qilindi' or order.is_status == 'Qaytarildi' %}
+          <span class="status-cancel">{{ order.is_status }}</span>
+        {% else %}
+          <span class="status-way">{{ order.is_status }}</span>
+        {% endif %}
+      </div>
+
+      <div class="order-card-items">
+        {% for item in order.items.all %}
+        <div class="order-card-item">
+          <div class="item-img-wrap {% if not item.product.product_image %}no-image{% endif %}">
+            {% if item.product.product_image %}
+              <img src="{{ item.product.product_image.url }}" alt="{{ item.product_name }}">
+            {% endif %}
+          </div>
+          <div class="item-info">
+            <div class="item-name">{{ item.product_name|default:"O'chirilgan mahsulot" }}</div>
+            <div class="item-count">{{ item.count }} dona</div>
+          </div>
+          <div class="item-price">{{ item.item_total_price|floatformat:0 }} so'm</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="order-card-footer">
+        <span class="label">Jami summa</span>
+        <span class="total">{{ order.total_order_price|floatformat:0 }} so'm</span>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="empty-state">
+      <div class="empty-state-icon">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+      </div>
+      <div class="empty-state-title">Hali buyurtma yo'q</div>
+      <div class="empty-state-text">Siz hozircha birorta ham buyurtma bermagansiz. Menyudan sevimli taomingizni tanlab, birinchi buyurtmangizni bering!</div>
+      <a href="{% url 'menu_home' %}" class="empty-state-btn">Menyuga o'tish</a>
+    </div>
+  {% endif %}
+
+  <div style="height:30px"></div>
+</div>
+
+<div class="bottom-nav">
+  <a href="{% url 'menu_home' %}" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24">
+      <rect x="3" y="3" width="7" height="7"></rect>
+      <rect x="14" y="3" width="7" height="7"></rect>
+      <rect x="14" y="14" width="7" height="7"></rect>
+      <rect x="3" y="14" width="7" height="7"></rect>
+    </svg>
+    <span>Menyu</span>
+  </a>
+
+  <a href="{% url 'savat_page' %}" class="bottom-nav-item">
+    <svg viewBox="0 0 24 24">
+      <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+      <line x1="3" y1="6" x2="21" y2="6" />
+      <path d="M16 10a4 4 0 01-8 0" />
+    </svg>
+    <span>Savat</span>
+    <span class="nav-badge {% if cart_count %}show{% endif %}" id="cartBadge">{% if cart_count %}{{ cart_count }}{% else %}0{% endif %}</span>
+  </a>
+
+  <a href="{% url 'profile_user' %}" class="bottom-nav-item active">
+    <svg viewBox="0 0 24 24">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+      <circle cx="12" cy="7" r="4"></circle>
+    </svg>
+    <span>Profil</span>
+  </a>
+</div>
+
+<script>
+document.querySelectorAll('.item-img-wrap img').forEach(img => {
+  const wrap = img.closest('.item-img-wrap');
+  const done = () => { img.classList.add('loaded'); if(wrap) wrap.classList.add('ready') };
+  if(img.complete) done(); else img.onload = done;
+});
+</script>
+
+</body>
+</html>

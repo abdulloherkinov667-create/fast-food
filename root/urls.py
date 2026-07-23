@@ -4,9 +4,8 @@ from django.urls import path
 from django.conf.urls.static import static 
 
 from products.views import menu_home, checkout_html
-from users.views import profile_page, savat_page, registratsiya_page, login_page, logout_user
+from users.views import profile_page, savat_page, registratsiya_page, login_page, logout_user, RegisterView, LoginView, order_history_page, buyurtma_tarixi
 from products.views import delete_product_cart, update_cart_quantity  
-from users.views import RegisterView, LoginView
 
 from products.profduct_api import ShoppingCartCreateAPIView, OrderCreateApiViuw
 
@@ -22,6 +21,9 @@ urlpatterns = [
     path('checkout_html/', checkout_html, name='checkout_html'),
     path('cart/update/<int:pk>/<str:action>/', update_cart_quantity, name='update_cart_quantity'),
     path('cart/update/<int:pk>/<str:action>/', update_cart_quantity, name='update_cart_quantity'),
+    path("profil/buyurtmalar/", order_history_page, name='order_history_page'),
+    path("buyurtma_tarixi/", buyurtma_tarixi, name='buyurtma_tarixi'),
+
     
     
     # api auth    
